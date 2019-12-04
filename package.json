@@ -1,0 +1,36 @@
+{
+  "name": "nuxt-rezdy",
+  "version": "0.0.0",
+  "description": "Rezdy for Nuxt",
+  "license": "MIT",
+  "contributors": [
+    {
+      "name": "Broc Gailit <brocgailit@gmail.com>"
+    }
+  ],
+  "main": "lib/module.js",
+  "repository": "",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "dev": "nuxt example",
+    "lint": "eslint --ext .js,.vue example lib test",
+    "test": "npm run lint"
+  },
+  "files": [
+    "lib"
+  ],
+  "dependencies": {
+    "babel-loader": "^8.0.6"
+  },
+  "devDependencies": {
+    "@babel/core": "latest",
+    "@babel/preset-env": "latest",
+    "@nuxtjs/eslint-config": "latest",
+    "babel-eslint": "latest",
+    "codecov": "latest",
+    "eslint": "latest",
+    "nuxt": "latest"
+  }
+}
