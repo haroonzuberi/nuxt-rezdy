@@ -18,7 +18,7 @@
           <ul class="session-time-slots">
             <li v-for="session of group" :key="session.id" class="session-time">
               <slot name="session" v-bind:session="session" />
-              <b-button type="is-success" @click="addBookingItem(session)">
+              <b-button type="is-success" @click="addBookingItem(session)" :disabled="!session.seatsAvailable">
                 {{ session.startTimeLocal | formatSessionTime }}
               </b-button>
             </li>
