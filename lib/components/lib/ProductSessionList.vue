@@ -28,7 +28,7 @@
         </div>
       </div>
     </div>
-    <b-button @click="loadMoreSessions" v-if="loadMore">
+    <b-button @click="loadMoreSessions" v-if="loadMore && sessions && sessions.length">
       {{ loadMoreLabel }}
     </b-button>
   </div>
