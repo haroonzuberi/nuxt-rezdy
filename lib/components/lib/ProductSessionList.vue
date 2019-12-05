@@ -1,77 +1,136 @@
 <template>
   <div class="session-list-compact">
-    <h3 class="sessions-title">
-      {{ title }}
-    </h3>
-    <div class="session-groups">
-      <div
-        v-for="(group, productCode) of sessionsGrouped"
-        :key="productCode"
-        class="session-group"
-      >
-        <span class="session-product-category">{{ group[0].product.categories[0].name }}</span>
-        <span class="session-product-name">
-          <nuxt-link class="session-product-link" :to="'/tours/'+group[0].product.slug">{{ group[0].product.name }}</nuxt-link>
-          <span v-if="group[0].product.discountAmount" class="session-price">
-            <span class="has-text-danger">
-              {{ group[0].product.discountMessage }}
-            </span>
-            <del>{{ group[0].product.rezdyProduct.advertisedPrice + group[0].product.discountAmount | price }}</del>
-            {{ group[0].product.rezdyProduct.advertisedPrice | price }}
+    <div v-for="(sessions, date) of sessionsByDate" :key="date">
+      <slot name="title" v-bind:date="date" v-bind:sessions="sessions">
+        {{ date }}
+      </slot>
+      <div class="session-groups">
+        <div
+          v-for="(group, productCode) of groupByProductCode(sessions)"
+          :key="productCode"
+          class="session-group"
+        >
+          <span class="session-product-name">
+            <slot name="product" v-bind:productCode="productCode" v-bind:sessions="sessions">
+              {{ productCode }}
+            </slot>
           </span>
-          <small v-else class="session-price">{{ group[0].product.rezdyProduct.advertisedPrice | price }}</small>
-        </span>
-        <ul class="session-time-slots">
-          <li v-for="session of group" :key="session.id" class="session-time">
-            <b-button color="success" @click="addBookingItem(session)">
-              {{ session.startTime | formatSessionTime }}
-            </b-button>
-            <div v-if="session.seatsAvailable < 6" class="session-availability" @click="addBookingItem()">
-              <!-- <fa :icon="['fas', session.product.transportation]" size="lg" /> -->
-              Only {{ session.seatsAvailable }} spot{{ session.seatsAvailable > 1 ? 's' : '' }} left!
-            </div>
-          </li>
-        </ul>
-        <!-- <ProductSessionCard :session="session" :guests="guests" /> -->
+          <ul class="session-time-slots">
+            <li v-for="session of group" :key="session.id" class="session-time">
+              <slot name="session" v-bind:session="session">
+                {{ session.startTime }}
+              </slot>
+              <b-button type="is-success" @click="addBookingItem(session)">
+                {{ session.startTimeLocal | formatSessionTime }}
+              </b-button>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
+    <b-button @click="loadMoreSessions" v-if="loadMore">
+      {{ loadMoreLabel }}
+    </b-button>
   </div>
 </template>
 
 <script>
-import { format, parse } from 'date-fns';
+import { format, parseISO, endOfDay, addWeeks } from 'date-fns';
+import { createNamespacedHelpers } from 'vuex';
+const { mapActions } = createNamespacedHelpers('rezdy/booking')
+
 export default {
   filters: {
     formatSessionTime(value) {
-      return format(parse(value), 'h:mm A');
+      return format(parseISO(value), 'h:mm a');
+      // return value;
     }
   },
   props: {
-    sessions: {
-      type: Array,
-      default: () => []
+    loadMore: {
+      type: Boolean,
+      default: false
     },
-    title: {
+    loadMoreLabel: {
       type: String,
-      default: ''
+      default: 'Load More'
     },
     guests: {
       type: Array,
       default: () => []
+    },
+    limit: {
+      type: Number,
+      default: 1
+    },
+    weeks: {
+      type: Number,
+      default: 6
+    },
+    productCode: {
+      type: Array,
+      default: () => []
+    }
+  },
+  data() {
+    return {
+      sessions: [],
+      offset: 0
+    }
+  },
+  watch: {
+    productCode: {
+      async handler(productCode) {
+        if(productCode && productCode.length) {
+          this.sessions = await this.loadSessions(productCode);
+        }
+      },
+      immediate: true
     }
   },
   computed: {
-    sessionsGrouped() {
-      return this.sessions.reduce((group, session) => {
+    endTimeLocal() {
+      return format(endOfDay(addWeeks(new Date(), this.weeks)), 'yyyy-MM-dd HH:mm:ss')
+    },
+    sessionsByDate() {
+      return this.sessions.reduce((dates, session) => {
+        const date = format(parseISO(session.startTimeLocal), 'yyyy-MM-dd');
+        dates[date] = [
+          ...(dates[date] ? dates[date] : []),
+          session
+        ];
+        return dates;
+      }, {});
+    }
+  },
+  methods: {
+    ...mapActions([
+      'addItem'
+    ]),
+    async loadMoreSessions() {
+      this.offset = this.offset + this.limit;
+      const sessions = await this.loadSessions(this.productCode)
+      this.sessions = [...this.sessions, ...sessions]
+    },
+    async loadSessions(productCode) {
+      const { sessions } = await this.$rezdy.getSessions({
+        productCode,
+        endTimeLocal: this.endTimeLocal,
+        limit: this.limit,
+        offset: this.offset
+      })
+      return sessions;
+    },
+    groupByProductCode(sessions) {
+      return sessions.reduce((group, session) => {
         group[session.productCode] = [
           ...(group[session.productCode] || []),
           session
         ];
         return group;
       }, {});
-    }
-  },
-  methods: {
+      return null
+    },
     addBookingItem(session) {
       const details = this.guests.map(g => {
         const [label, value] = Array.isArray(g) ? g : g.split(',');
@@ -102,8 +161,8 @@ export default {
           optionId: q.id
         }))
       };
-      this.$store.dispatch('booking/addItem', item);
-      this.$router.push('/checkout');
+      console.log(this.addItem(item));
+      // this.$router.push('/checkout');
     }
   }
 };
