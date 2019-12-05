@@ -38,7 +38,7 @@
             </b-steps>
             <div>
                 <b-button @click="$parent.close()">
-                    {{closeLabel}}
+                    {{ $parent.$t('cancel') }}
                 </b-button>
             </div>
         </div>
@@ -55,10 +55,6 @@ export default {
             type: String,
             default: null
         },
-        closeLabel: {
-            type: String,
-            default: 'Close'
-        },
         app: {
             type: Object,
             default: () => null
@@ -74,9 +70,6 @@ export default {
         }
     },
     computed: {
-        $rezdy() {
-            return this.app.$rezdy
-        },
         sessionTimes() {
             return this.sessions.filter(session => isSameDay(parseISO(session.startTimeLocal), this.selectedDate))
         },
@@ -107,7 +100,7 @@ export default {
     methods: {
         getSessions: debounce(async function() {
             this.loading = true;
-            const { sessions } = await this.$rezdy.getSessions({
+            const { sessions } = await this.$parent.$rezdy.getSessions({
                 productCode: this.productCode,
                 startTimeLocal: this.startTimeLocal,
                 endTimeLocal: this.endTimeLocal,
