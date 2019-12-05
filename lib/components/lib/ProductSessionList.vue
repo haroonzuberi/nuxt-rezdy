@@ -28,9 +28,10 @@
         </div>
       </div>
     </div>
-    <b-button @click="loadMoreSessions" v-if="loadMore && sessions && sessions.length">
+    <b-button @click="loadMoreSessions" v-if="loadMore && sessions.length" :disabled="loading" :loading="loading">
       {{ loadMoreLabel }}
     </b-button>
+    <b-loading :active.sync="loading" />
   </div>
 </template>
 
@@ -75,7 +76,8 @@ export default {
   data() {
     return {
       sessions: [],
-      offset: 0
+      offset: 0,
+      loading: false
     }
   },
   watch: {
@@ -113,13 +115,15 @@ export default {
       this.sessions = [...this.sessions, ...sessions]
     },
     async loadSessions(productCode) {
+      this.loading = true
       const { sessions } = await this.$rezdy.getSessions({
         productCode,
         endTimeLocal: this.endTimeLocal,
         limit: this.limit,
         offset: this.offset
       })
-      return sessions;
+      this.loading = false
+      return sessions
     },
     groupByProductCode(sessions) {
       return sessions.reduce((group, session) => {
@@ -161,7 +165,7 @@ export default {
           optionId: q.id
         }))
       };
-      console.log(this.addItem(item));
+      this.addItem(item)
       // this.$router.push('/checkout');
     }
   }
