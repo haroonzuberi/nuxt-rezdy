@@ -30,8 +30,6 @@ export default {
             const formattedPrice = this.$options.filters.currency(price, this.$i18n.locale, currency)
 
             switch(extraPriceType) {
-                case 'FIXED':
-                    return `${formattedPrice} per booking`
                 case 'ANY':
                     return `${formattedPrice} each`
                 case 'QUANTITY':
