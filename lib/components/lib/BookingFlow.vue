@@ -1,10 +1,20 @@
 <template>
     <div class="section">
         <div class="container" v-if="product">
-            {{ hasExtras }}
+            <checkout-overview
+                :product="product"
+                :session="selectedSession"
+                :guests="guests"
+                :participants-fields="participants"
+                :booking-fields="bookingFields"
+                :extras="extras"
+            />
             <b-steps :has-navigation="false" v-model="currentStep">
                 <b-step-item :label="steps[0].name" :icon="steps[0].icon">
-                    <checkout-session-select :product-code="productCode" :session.sync="selectedSession" />
+                    <checkout-session-select
+                        :product-code="productCode"
+                        :session.sync="selectedSession"
+                    />
                 </b-step-item>
                 <b-step-item :label="steps[1].name" :icon="steps[1].icon">
                     <checkout-pricing-select
@@ -28,7 +38,10 @@
                     />
                 </b-step-item>
                 <b-step-item :label="steps[2].name" :icon="steps[2].icon" v-if="hasExtras">
-                    <checkout-extras :product="product" />
+                    <checkout-extras
+                        :product="product"
+                        :extras.sync="extras"
+                    />
                 </b-step-item>
                 <b-step-item :label="steps[3].name" :icon="steps[3].icon">
                     I'm whatever
@@ -62,6 +75,7 @@ import CheckoutPricingSelect from './CheckoutPricingSelect.vue'
 import CheckoutBookingFields from './CheckoutBookingFields.vue'
 import CheckoutParticipants from './CheckoutParticipants.vue'
 import CheckoutExtras from './CheckoutExtras.vue'
+import CheckoutOverview from './CheckoutOverview.vue'
 
 export default {
     name: 'ProductBookingFlow',
@@ -70,7 +84,8 @@ export default {
         CheckoutPricingSelect,
         CheckoutBookingFields,
         CheckoutParticipants,
-        CheckoutExtras
+        CheckoutExtras,
+        CheckoutOverview
     },
     props: {
         productCode: {
@@ -92,6 +107,7 @@ export default {
             participantsValid: false,
             bookingFields: [],
             bookingFieldsValid: false,
+            extras: [],
             steps: [
                 {
                     name: 'Schedule',
@@ -101,7 +117,10 @@ export default {
                 {
                     name: 'Info',
                     icon: 'user',
-                    valid: () => this.totalQuantity > 0 && this.bookingFieldsValid && (!this.hasParticipantFields || this.participantsValid)
+                    valid: () =>
+                        this.totalQuantity > 0 &&
+                        this.bookingFieldsValid &&
+                        (!this.hasParticipantFields || this.participantsValid)
                 },
                 {
                     name: 'Extras', icon: 'plus', valid: () => true
@@ -141,7 +160,6 @@ export default {
     watch: {
         selectedSession:{
             handler(session) {
-                console.log(session);
                 if(session) {
                     this.currentStep = 1
                 }
