@@ -1,6 +1,6 @@
 <template>
   <b-field
-    :label="field.label"
+    :label="$t(field.label)"
     :class="[{ 'is-required': required }, widthClass]"
   >
     <b-input
@@ -91,11 +91,14 @@
     <b-datepicker
       v-else-if="type === 'Date'"
       v-model="updatedValue"
+      :month-names="monthNames"
       icon="calendar"
     />
     <div v-else>UNKNOWN FIELD TYPE: {{ type }}</div>
   </b-field>
 </template>
+
+<i18n src="./lang.json"></i18n>
 
 <script>
 import { format } from 'date-fns'
@@ -120,6 +123,9 @@ export default {
     };
   },
   computed: {
+    monthNames() {
+      return Object.values(this.$t('months'))
+    },
     type() {
       switch (this.field.label) {
         case "Preferred Language":

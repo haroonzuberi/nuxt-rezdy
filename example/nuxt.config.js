@@ -9,5 +9,14 @@ module.exports = {
   },
   modules: [
     { handler: require('../') }
-  ]
+  ],
+  build: {
+    extend (config, ctx) {
+      config.module.rules.push({
+        resourceQuery: /blockType=i18n/,
+        type: 'javascript/auto',
+        loader: '@kazupon/vue-i18n-loader'
+      })
+    }
+  }
 }

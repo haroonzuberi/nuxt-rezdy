@@ -5,6 +5,7 @@
             v-if="extra.extraPriceType === 'ANY'"
             v-model="updatedValue"
             controls-position="compact"
+            :type="updatedValue > 0 ? 'is-primary' : 'is-grey'"
         />
         <b-switch v-else v-model="updatedValue"  :true-value="1" :false-value="0" />
     </b-field>

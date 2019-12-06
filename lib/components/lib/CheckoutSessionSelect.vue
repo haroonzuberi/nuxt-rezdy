@@ -5,6 +5,7 @@
       ref="datepicker"
       inline
       v-model="selectedDate"
+      :month-names="monthNames"
       :events="events"
       :selectable-dates="selectableDates"
       :unselectable-days-of-week="unselectableDaysOfWeek"
@@ -12,7 +13,7 @@
       <b-loading :active="loading" :is-full-page="false" />
     </b-datepicker>
     <div class="column">
-      {{ selectedDate.toISOString() | formatDate("MMMM d, yyyy") }}
+      {{ selectedDate.toISOString() | formatDateLocale("PPP", $i18n.locale) }}
       <ul>
         <li v-for="session of sessionTimes" :key="session.id">
           <b-button
@@ -20,7 +21,7 @@
             type="is-success"
             @click="selectSession(session)"
           >
-            {{ session.startTimeLocal | formatDate("H:mm") }}
+            {{ session.startTimeLocal | formatDateLocale("p", $i18n.locale) }}
           </b-button>
           {{ session.seatsAvailable }}
         </li>
@@ -29,12 +30,16 @@
   </div>
 </template>
 
+<i18n src="./lang.json"></i18n>
+
 <script>
 import { parseISO, format, isSameDay } from 'date-fns'
+import locale from '../../mixins/locale'
 import debounce from 'lodash/debounce'
 
 export default {
     name: 'CheckoutSessionSelect',
+    mixins: [locale],
     props: {
         productCode: {
             type: String,

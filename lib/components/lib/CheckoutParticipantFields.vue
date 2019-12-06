@@ -21,11 +21,13 @@
                 />
             </div>
             <button v-show="!expanded" class="button is-text is-pulled-right" slot="trigger" aria-controls="optionalParticipantFields">
-                Add additional detail
+                {{ $t('add-detail') }}
             </button>
         </b-collapse>
     </form>
 </template>
+
+<i18n src="./lang.json"></i18n>
 
 <script>
 import CheckoutFieldInput from './CheckoutFieldInput.vue'

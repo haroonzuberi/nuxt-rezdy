@@ -10,13 +10,13 @@
                 :extras="extras"
             />
             <b-steps :has-navigation="false" v-model="currentStep">
-                <b-step-item :label="steps[0].name" :icon="steps[0].icon">
+                <b-step-item :label="$t(steps[0].name)" :icon="steps[0].icon">
                     <checkout-session-select
                         :product-code="productCode"
                         :session.sync="selectedSession"
                     />
                 </b-step-item>
-                <b-step-item :label="steps[1].name" :icon="steps[1].icon">
+                <b-step-item :label="$t(steps[1].name)" :icon="steps[1].icon">
                     <checkout-pricing-select
                         v-if="selectedSession"
                         :total-guests="totalGuests"
@@ -37,20 +37,20 @@
                         :valid.sync="bookingFieldsValid"
                     />
                 </b-step-item>
-                <b-step-item :label="steps[2].name" :icon="steps[2].icon" v-if="hasExtras">
+                <b-step-item :label="$t(steps[2].name)" :icon="steps[2].icon" v-if="hasExtras">
                     <checkout-extras
                         :product="product"
                         :extras.sync="extras"
                     />
                 </b-step-item>
-                <b-step-item :label="steps[3].name" :icon="steps[3].icon">
+                <b-step-item :label="$t(steps[3].name)" :icon="steps[3].icon">
                     I'm whatever
                 </b-step-item>
             </b-steps>
             <div class="level">
                 <div class="level-left">
                     <b-button class="level-item" @click="$parent.close()">
-                        {{ $parent.$t('cancel') }}
+                        {{ $t('cancel') }}
                     </b-button>
                 </div>
                 <div class="level-right">
@@ -61,7 +61,7 @@
                         @click="next()"
                         :disabled="!valid"
                     >
-                        {{ $parent.$t('continue') }}
+                        {{ $t('continue') }}
                     </b-button>
                 </div>
             </div>
@@ -69,6 +69,9 @@
         <b-loading :is-full-page="false" :active="!product" />
     </div>
 </template>
+
+<i18n src="./lang.json" ></i18n>
+
 <script>
 import CheckoutSessionSelect from './CheckoutSessionSelect.vue'
 import CheckoutPricingSelect from './CheckoutPricingSelect.vue'
@@ -110,12 +113,12 @@ export default {
             extras: [],
             steps: [
                 {
-                    name: 'Schedule',
+                    name: 'schedule',
                     icon: 'calendar',
                     valid: () => !!this.selectedSession
                 },
                 {
-                    name: 'Info',
+                    name: 'info',
                     icon: 'user',
                     valid: () =>
                         this.totalQuantity > 0 &&
@@ -123,7 +126,7 @@ export default {
                         (!this.hasParticipantFields || this.participantsValid)
                 },
                 {
-                    name: 'Extras', icon: 'plus', valid: () => true
+                    name: 'extras', icon: 'plus', valid: () => true
                 },
                 {
                     name: 'checkout',

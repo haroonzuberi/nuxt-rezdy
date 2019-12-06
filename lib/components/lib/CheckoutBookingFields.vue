@@ -1,6 +1,5 @@
 <template>
     <form ref="form" @submit.prevent v-if="product">
-        Checkout booking fields
         <div class="columns is-multiline">
             <checkout-field-input
                 class="column"
@@ -22,11 +21,13 @@
                 />
             </div>
             <button v-show="!expanded" class="button is-text is-pulled-right" slot="trigger" aria-controls="optionalFields">
-                Add additional detail
+                {{ $t('add-detail') }}
             </button>
         </b-collapse>
     </form>
 </template>
+
+<i18n src="./lang.json"></i18n>
 
 <script>
 import CheckoutFieldInput from './CheckoutFieldInput.vue'
@@ -51,7 +52,8 @@ export default {
     },
     data() {
         return {
-            expanded: false
+            expanded: false,
+            test: 'test'
         }
     },
     computed: {
