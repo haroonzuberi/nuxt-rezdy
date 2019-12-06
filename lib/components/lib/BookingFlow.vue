@@ -1,124 +1,178 @@
 <template>
     <div class="section">
-        <div class="container">
-            <b-steps :has-navigation="false">
-                <b-step-item label="Schedule" icon="calendar">
-                    <div class="columns">
-                        <b-datepicker
-                            class="column"
-                            ref="datepicker"
-                            inline
-                            indicators="bars"
-                            v-model="selectedDate"
-                            :events="events"
-                            :selectable-dates="selectableDates"
-                            :unselectable-days-of-week="unselectableDaysOfWeek"
-                        >
-                            <b-loading :active="loading" :is-full-page="false" />
-                        </b-datepicker>
-                        <div class="column">
-                            {{ selectedDate.toISOString() | formatDate('MMMM d, yyyy')}}
-                            <ul>
-                                <li v-for="session of sessionTimes" :key="session.id">
-                                    <b-button :disabled="!session.seatsAvailable" type="is-success">
-                                        {{ session.startTimeLocal | formatDate('H:mm') }}
-                                    </b-button>
-                                    {{ session.seatsAvailable }}
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+        <div class="container" v-if="product">
+            {{ hasExtras }}
+            <b-steps :has-navigation="false" v-model="currentStep">
+                <b-step-item :label="steps[0].name" :icon="steps[0].icon">
+                    <checkout-session-select :product-code="productCode" :session.sync="selectedSession" />
                 </b-step-item>
-                <b-step-item label="Info" icon="user">
-                    I'm the guest stuff
+                <b-step-item :label="steps[1].name" :icon="steps[1].icon">
+                    <checkout-pricing-select
+                        v-if="selectedSession"
+                        :total-guests="totalGuests"
+                        :session="selectedSession"
+                        :max="product.quantityRequiredMax"
+                        :guests.sync="guests"
+                    />
+                    <checkout-participants
+                        v-if="hasParticipantFields"
+                        :product="product"
+                        :total-guests="totalGuests"
+                        :participants.sync="participants"
+                        :valid.sync="participantsValid"
+                    />
+                    <checkout-booking-fields
+                        :product="product"
+                        :fields.sync="bookingFields"
+                        :valid.sync="bookingFieldsValid"
+                    />
                 </b-step-item>
-                <b-step-item label="Checkout" icon="account-plus">
+                <b-step-item :label="steps[2].name" :icon="steps[2].icon" v-if="hasExtras">
+                    <checkout-extras :product="product" />
+                </b-step-item>
+                <b-step-item :label="steps[3].name" :icon="steps[3].icon">
                     I'm whatever
                 </b-step-item>
             </b-steps>
-            <div>
-                <b-button @click="$parent.close()">
-                    {{ $parent.$t('cancel') }}
-                </b-button>
+            <div class="level">
+                <div class="level-left">
+                    <b-button class="level-item" @click="$parent.close()">
+                        {{ $parent.$t('cancel') }}
+                    </b-button>
+                </div>
+                <div class="level-right">
+                    <b-button
+                        class="level-item"
+                        type="is-success"
+                        size="is-medium"
+                        @click="next()"
+                        :disabled="!valid"
+                    >
+                        {{ $parent.$t('continue') }}
+                    </b-button>
+                </div>
             </div>
         </div>
+        <b-loading :is-full-page="false" :active="!product" />
     </div>
 </template>
 <script>
-import { parseISO, format, isSameDay } from 'date-fns'
-import debounce from 'lodash/debounce'
+import CheckoutSessionSelect from './CheckoutSessionSelect.vue'
+import CheckoutPricingSelect from './CheckoutPricingSelect.vue'
+import CheckoutBookingFields from './CheckoutBookingFields.vue'
+import CheckoutParticipants from './CheckoutParticipants.vue'
+import CheckoutExtras from './CheckoutExtras.vue'
 
 export default {
     name: 'ProductBookingFlow',
+    components: {
+        CheckoutSessionSelect,
+        CheckoutPricingSelect,
+        CheckoutBookingFields,
+        CheckoutParticipants,
+        CheckoutExtras
+    },
     props: {
         productCode: {
             type: String,
             default: null
         },
-        app: {
+        session: {
             type: Object,
             default: () => null
         }
     },
     data() {
         return {
-            sessions: [],
-            month: new Date().getMonth(),
-            year: new Date().getFullYear(),
-            loading: false,
-            selectedDate: new Date()
+            currentStep: 0,
+            selectedSession: null,
+            product: null,
+            guests: [],
+            participants: [],
+            participantsValid: false,
+            bookingFields: [],
+            bookingFieldsValid: false,
+            steps: [
+                {
+                    name: 'Schedule',
+                    icon: 'calendar',
+                    valid: () => !!this.selectedSession
+                },
+                {
+                    name: 'Info',
+                    icon: 'user',
+                    valid: () => this.totalQuantity > 0 && this.bookingFieldsValid && (!this.hasParticipantFields || this.participantsValid)
+                },
+                {
+                    name: 'Extras', icon: 'plus', valid: () => true
+                },
+                {
+                    name: 'checkout',
+                    icon: 'money-bill-wave',
+                    valid: () => false
+                }
+            ]
         }
     },
     computed: {
-        sessionTimes() {
-            return this.sessions.filter(session => isSameDay(parseISO(session.startTimeLocal), this.selectedDate))
+        valid() {
+            return this.steps[this.currentStep].valid()
         },
-        startTimeLocal() {
-            return format(new Date(this.year, this.month), 'yyyy-MM-dd HH:mm:ss')
+        totalQuantity() {
+            return this.guests
+                .map(option => option.value)
+                .reduce((acc, count) => acc + count, 0);
         },
-        endTimeLocal() {
-            return format(new Date(this.year, this.month + 1), 'yyyy-MM-dd HH:mm:ss')
+        totalGuests() {
+            return this.guests
+                .map(
+                    option =>
+                        option.value * this.selectedSession.priceOptions.find(p => p.id === option.optionId).seatsUsed
+                )
+                .reduce((acc, count) => acc + count, 0);
         },
-        selectableDates() {
-            return this.sessions.map(session => parseISO(session.startTimeLocal))
+        hasParticipantFields() {
+            return this.product && this.product.bookingFields.some(field => field.visiblePerParticipant)
         },
-        unselectableDaysOfWeek() {
-            return this.selectableDates.length ? [] : [0,1,2,3,4,5,6]
-        },
-        events() {
-            return this.selectableDates.map(date => ({
-                date,
-                type: 'is-success'
-            })) 
+        hasExtras() {
+            return this.product && this.product.extras && this.product.extras.length
         }
     },
     watch: {
-        startTimeLocal(startTimeLocal) {
-            this.getSessions()
+        selectedSession:{
+            handler(session) {
+                console.log(session);
+                if(session) {
+                    this.currentStep = 1
+                }
+            },
+            immediate: true
         }
     },
-    methods: {
-        getSessions: debounce(async function() {
-            this.loading = true;
-            const { sessions } = await this.$parent.$rezdy.getSessions({
-                productCode: this.productCode,
-                startTimeLocal: this.startTimeLocal,
-                endTimeLocal: this.endTimeLocal,
-                rspc: 1
-            })
-            this.sessions = sessions
-            this.loading = false
-        }, 200)
-    },
     mounted: async function(){
-        this.getSessions()
-
-        this.$refs.datepicker.$on('change-month', month => {
-            this.month = month
-        })
-        this.$refs.datepicker.$on('change-year', year => {
-            this.year = year
-        })
+        if(this.session) {
+            this.selectedSession = this.session
+        }
+        const { products } = await this.$parent.$rezdy.getProducts({productCode: [this.productCode]})
+        this.product = products[0]
+    },
+    methods: {
+        next() {
+            this.currentStep = this.currentStep + 1;
+        }
     }
 }
 </script>
+
+<style scoped>
+.section {
+    min-height: 300px
+}
+.participants-enter-active, .participants-leave-active {
+  transition: all 250ms ease-in-out;
+}
+.participants-enter, .participants-leave-to /* .list-leave-active below version 2.1.8 */ {
+  opacity: 0;
+  transform: scale(0.5);
+}
+</style>

@@ -1,0 +1,52 @@
+<template>
+    <b-field :label="label">
+        <b-numberinput v-if="extra.extraPriceType === 'ANY'" v-model="updatedValue" controls-position="compact"/>
+        <b-switch v-else v-model="updatedValue"  :true-value="1" :false-value="0" />
+    </b-field>
+</template>
+
+<script>
+export default {
+    props: {
+        value: {
+            type: Number,
+            default: 0
+        },
+        extra: {
+            type: Object,
+            default: () => null
+        },
+        product: {
+            type: Object,
+            default: () => null
+        }
+
+    },
+    computed: {
+        label() {
+            const { price, extraPriceType } = this.extra;
+            const { unitLabel, currency } = this.product
+
+            const formattedPrice = this.$options.filters.currency(price, this.$i18n.locale, currency)
+
+            switch(extraPriceType) {
+                case 'FIXED':
+                    return `${formattedPrice} per booking`
+                case 'ANY':
+                    return `${formattedPrice} each`
+                case 'QUANTITY':
+                    return  `${formattedPrice} per ${unitLabel}`
+            }
+            return formattedPrice
+        },
+        updatedValue: {
+            get() {
+                return this.value;
+            },
+            set(val) {
+                this.$emit('input', val);
+            }
+        }
+    }
+}
+</script>

@@ -164,6 +164,8 @@ export default {
         }))
       };
       this.addItem(item)
+
+      this.$rezdy.checkoutSession(session, this)
       // this.$router.push('/checkout');
     }
   }
