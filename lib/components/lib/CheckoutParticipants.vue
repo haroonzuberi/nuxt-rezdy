@@ -6,7 +6,7 @@
                 ref="participant"
                 :product="product"
                 :fields="participants[i]"
-                @update:valid="checkValidity(i, $event)"
+                @update:valid="checkValidity"
                 @update:fields="updateFields(i, $event)"
             />
         </div>
@@ -34,8 +34,15 @@ export default {
             default: 0
         }
     },
+    watch: {
+        totalGuests(guests) {
+            this.$nextTick(() => {
+                this.checkValidity() 
+            })
+        }
+    },
     methods: {
-        checkValidity(guest, valid) {
+        checkValidity() {
             this.$emit(
                 'update:valid',
                 this.$refs.participant.reduce(
