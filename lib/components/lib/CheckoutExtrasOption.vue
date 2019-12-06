@@ -1,6 +1,11 @@
 <template>
     <b-field :label="label">
-        <b-numberinput v-if="extra.extraPriceType === 'ANY'" v-model="updatedValue" controls-position="compact"/>
+        <b-numberinput
+            :min="0"
+            v-if="extra.extraPriceType === 'ANY'"
+            v-model="updatedValue"
+            controls-position="compact"
+        />
         <b-switch v-else v-model="updatedValue"  :true-value="1" :false-value="0" />
     </b-field>
 </template>
@@ -43,6 +48,7 @@ export default {
             },
             set(val) {
                 this.$emit('input', val);
+                this.$emit('update:option', val)
             }
         }
     }

@@ -16,7 +16,11 @@
                     </div>
                 </article>
                 <div class="checkout-option">
-                    <checkout-extras-option :extra="extra" :product="product" />
+                    <checkout-extras-option
+                        :extra="extra"
+                        :product="product"
+                        :value="getValue(extra)"
+                        @update:option="updateOption(extra, $event)" />
                 </div>
             </div>
         </li>
@@ -35,6 +39,26 @@ export default {
         product: {
             type: Object,
             default: () => null
+        },
+        extras: {
+            type: Array,
+            default: () => []
+        }
+    },
+    methods: {
+        getValue(extra) {
+            const option = this.extras.find(e => e.name === extra.name)
+            return option ? option.quantity : 0
+        },
+        updateOption(extra, quantity) {
+            const update = [
+                ...(this.extras || []).filter(e => e.name !== extra.name),
+                {...extra, quantity }
+            ]
+                .filter(e => e.quantity > 0)
+                .sort((a,b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0)
+    
+            this.$emit('update:extras', update)
         }
     }
 }
