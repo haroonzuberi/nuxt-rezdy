@@ -23,8 +23,8 @@
       v-model="updatedValue"
       :icon="icon"
       :required="required"
+      placeholder="Select..."
     >
-      <option value="">Select...</option>
       <option value="Internet search">Internet search</option>
       <option value="Friend">Friend</option>
       <option value="Social Media">Social Media</option>
@@ -44,8 +44,8 @@
       v-model="updatedValue"
       :icon="icon"
       :required="required"
+      placeholder="Select a language"
     >
-      <option value="">Select...</option>
       <option value="en">English</option>
       <option value="fr">Français</option>
       <option value="es">Español</option>
@@ -69,6 +69,7 @@
       v-model="updatedValue"
       :icon="icon"
       :required="required"
+      placeholder="Select..."
     >
       <option
         v-for="(option, idx) of parseListOptions(
@@ -122,7 +123,9 @@ export default {
     type() {
       switch (this.field.label) {
         case "Preferred Language":
-          return "Language";
+          return "Language"
+        case "How did you hear about us?":
+          return "Attribution"
       }
       return this.field.fieldType;
     },
