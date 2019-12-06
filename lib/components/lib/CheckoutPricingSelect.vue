@@ -112,7 +112,7 @@ export default {
             ]
           : [...this.guests, update];
 
-      this.$emit("update:guests", this.guests);
+      this.$emit("update:guests", this.guests.filter(guest => guest.value > 0));
     }
   },
   created: function() {
