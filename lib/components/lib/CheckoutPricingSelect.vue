@@ -1,19 +1,27 @@
 <template>
   <div>
-    Pricing Select
-    <div v-for="option of individualOptions" :key="option.id">
-        <checkout-pricing-option
-          :session="session"
-          :guests="guests"
-          :total-guests="totalGuests"
-          :option="option"
-          :max="max"
-          :min="0"
-          @input="updateGuestCounts(option, $event)"
-        />
+    <h2 class="title">{{$t('select')}} {{ product.unitLabelPlural }}</h2>
+    <div class="columns is-multiline">
+      <div class="column is-one-third" v-for="option of individualOptions" :key="option.id" >
+        <b-field>
+            <checkout-pricing-option
+              :session="session"
+              :guests="guests"
+              :total-guests="totalGuests"
+              :option="option"
+              :max="max"
+              :min="0"
+              controls-position="compact"
+              @input="updateGuestCounts(option, $event)"
+            />
+        </b-field>
+      </div>
     </div>
   </div>
 </template>
+
+<i18n src="./lang.json" ></i18n>
+
 <script>
 import CheckoutPricingOption from './CheckoutPricingOption.vue'
 export default {
@@ -120,3 +128,17 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+
+.columns {
+  justify-content: space-around;
+  margin-bottom: 2rem;
+}
+
+.column::v-deep .label {
+  text-align: center;
+  font-weight: bold;
+}
+
+</style>

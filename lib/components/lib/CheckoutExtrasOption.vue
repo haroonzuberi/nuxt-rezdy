@@ -34,14 +34,7 @@ export default {
             const { unitLabel, currency } = this.product
 
             const formattedPrice = this.$options.filters.currency(price, this.$i18n.locale, currency)
-
-            switch(extraPriceType) {
-                case 'ANY':
-                    return `${formattedPrice} each`
-                case 'QUANTITY':
-                    return  `${formattedPrice} per ${unitLabel}`
-            }
-            return formattedPrice
+            return extraPriceType === 'QUANTITY' ? `${formattedPrice} / ${unitLabel}` : formattedPrice
         },
         updatedValue: {
             get() {

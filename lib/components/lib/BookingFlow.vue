@@ -21,6 +21,7 @@
                         v-if="selectedSession"
                         :total-guests="totalGuests"
                         :session="selectedSession"
+                        :product="product"
                         :max="product.quantityRequiredMax"
                         :guests.sync="guests"
                     />
@@ -57,7 +58,7 @@
                     <b-button
                         class="level-item"
                         type="is-success"
-                        size="is-medium"
+                        size="is-large"
                         @click="next()"
                         :disabled="!valid"
                     >

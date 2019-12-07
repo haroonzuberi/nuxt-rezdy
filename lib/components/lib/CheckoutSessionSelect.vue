@@ -1,33 +1,42 @@
 <template>
-  <div class="columns">
-    <b-datepicker
-      class="column"
-      ref="datepicker"
-      inline
-      v-model="selectedDate"
-      :month-names="monthNames"
-      :events="events"
-      :selectable-dates="selectableDates"
-      :unselectable-days-of-week="unselectableDaysOfWeek"
-    >
-      <b-loading :active="loading" :is-full-page="false" />
-    </b-datepicker>
-    <div class="column">
-      {{ selectedDate.toISOString() | formatDateLocale("PPP", $i18n.locale) }}
-      <ul>
-        <li v-for="session of sessionTimes" :key="session.id">
-          <b-button
-            :disabled="!session.seatsAvailable"
-            type="is-success"
-            @click="selectSession(session)"
-          >
-            {{ session.startTimeLocal | formatDateLocale("p", $i18n.locale) }}
-          </b-button>
-          {{ session.seatsAvailable }}
-        </li>
-      </ul>
+    <div>
+        <h2 class="title">{{$t('select')}} {{$t('date-and-time')}}</h2>
+        <div class="columns">
+            <div class="column has-items-centered">
+                <b-datepicker
+                    ref="datepicker"
+                    inline
+                    v-model="selectedDate"
+                    :month-names="monthNames"
+                    :events="events"
+                    :selectable-dates="selectableDates"
+                    :unselectable-days-of-week="unselectableDaysOfWeek"
+                >
+                    <b-loading :active="loading" :is-full-page="false" />
+                </b-datepicker>
+            </div>
+            <div class="column has-items-centered">
+                <div>
+                    <p class="content has-text-centered subtitle is-5">
+                        {{ $t('choose-time') }}:
+                    </p>
+                    <ul class="columns is-multiline">
+                        <li v-for="session of sessionTimes" :key="session.id" class="column">
+                            <b-button
+                                :disabled="!session.seatsAvailable"
+                                type="is-success"
+                                size="is-large"
+                                @click="selectSession(session)"
+                            >
+                                {{ session.startTimeLocal | formatDateLocale("p", $i18n.locale) }}
+                            </b-button>
+                            <!-- {{ session.seatsAvailable }} -->
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <i18n src="./lang.json"></i18n>
@@ -127,3 +136,11 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.has-items-centered {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+</style>

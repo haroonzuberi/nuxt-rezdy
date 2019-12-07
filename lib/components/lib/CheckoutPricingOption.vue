@@ -1,8 +1,10 @@
 <template>
-    <b-field :label="option.label" :message="!(optionMaxQuantity - optionValue) ? 'Nothing left' : null">
+    <b-field :label="option.label" class="pricing-option">
         <b-numberinput
+            size="is-medium"
             :min="min"
             :max="optionMaxQuantity"
+            :type="optionValue > 0 ? 'is-primary' : 'is-grey'"
             v-model="optionValue"
         />
     </b-field>
@@ -74,3 +76,9 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.pricing-option::v-deep .field-body {
+    flex-grow: 1;
+}
+</style>
