@@ -4,7 +4,7 @@
             <checkout-overview
                 :product="product"
                 :session="selectedSession"
-                :guests="guests"
+                :quantities="quantities"
                 :participants-fields="participants"
                 :booking-fields="bookingFields"
                 :extras="extras"
@@ -23,7 +23,7 @@
                         :session="selectedSession"
                         :product="product"
                         :max="product.quantityRequiredMax"
-                        :guests.sync="guests"
+                        :quantities.sync="quantities"
                     />
                     <checkout-participants
                         v-if="hasParticipantFields"
@@ -53,6 +53,15 @@
                     <b-button class="level-item" @click="$parent.close()">
                         {{ $t('cancel') }}
                     </b-button>
+                    <b-button class="level-item" @click="$parent.close()">
+                        {{ $t('previous') }}
+                    </b-button>
+                </div>
+                <div class="level-item" v-if="total > 0">
+                    <span v-if="!loadingTotal">
+                        {{ total | currency($i18n.locale, product.currency) }}
+                    </span>
+                    <span v-else>{{$t('loading')}} ...</span>
                 </div>
                 <div class="level-right">
                     <b-button
@@ -74,6 +83,9 @@
 <i18n src="./lang.json" ></i18n>
 
 <script>
+
+import debounce from 'lodash/debounce'
+
 import CheckoutSessionSelect from './CheckoutSessionSelect.vue'
 import CheckoutPricingSelect from './CheckoutPricingSelect.vue'
 import CheckoutBookingFields from './CheckoutBookingFields.vue'
@@ -104,13 +116,15 @@ export default {
     data() {
         return {
             currentStep: 0,
+            loadingTotal: false,
             selectedSession: null,
             product: null,
-            guests: [],
+            quantities: [],
             participants: [],
             participantsValid: false,
             bookingFields: [],
             bookingFieldsValid: false,
+            total: 0,
             extras: [],
             steps: [
                 {
@@ -141,13 +155,26 @@ export default {
         valid() {
             return this.steps[this.currentStep].valid()
         },
+        productTotal() {
+            return this.quantities.reduce(
+                (total, quantity) => total + quantity.value * quantity.optionPrice,
+                0
+            )
+        },
+        quote() {
+            return {
+                session: this.selectedSession,
+                quantities: this.quantities,
+                extras: this.extras
+            }
+        },
         totalQuantity() {
-            return this.guests
+            return this.quantities
                 .map(option => option.value)
                 .reduce((acc, count) => acc + count, 0);
         },
         totalGuests() {
-            return this.guests
+            return this.quantities
                 .map(
                     option =>
                         option.value * this.selectedSession.priceOptions.find(p => p.id === option.optionId).seatsUsed
@@ -169,7 +196,13 @@ export default {
                 }
             },
             immediate: true
-        }
+        },
+        quote: debounce(async function(value) {
+            this.loadingTotal = true
+            const { booking } = await this.$rezdy.getQuote(value)
+            this.total = booking ? booking.totalAmount : 0
+            this.loadingTotal = false
+        }, 200) 
     },
     mounted: async function(){
         if(this.session) {

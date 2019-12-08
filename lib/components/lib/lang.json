@@ -2,6 +2,7 @@
     "en": {
         "cancel": "Cancel",
         "continue": "Continue",
+        "previous": "Previous",
         "schedule": "Schedule",
         "info": "Info",
         "extras": "Extras",
@@ -16,6 +17,7 @@
         "minutes": "minutes",
         "from": "Starting from",
         "optional": "Optional",
+        "loading": "Loading",
         "Title": "Title",
         "First Name": "First Name",
         "Middle Name": "Middle Name",
@@ -41,6 +43,7 @@
     "it": {
         "cancel": "Annulla",
         "continue": "Continua",
+        "previous": "Precedente",
         "schedule": "Programma",
         "info": "Informazioni",
         "extras": "Extra",
@@ -55,6 +58,7 @@
         "minutes": "minuti",
         "optional": "Opzionale",
         "from": "Partendo da",
+        "loading": "Caricamento",
         "Title": "Title",
         "First Name": "Nome di battesimo",
         "Middle Name": "Secondo nome",

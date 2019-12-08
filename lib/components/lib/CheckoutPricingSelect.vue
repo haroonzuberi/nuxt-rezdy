@@ -6,7 +6,7 @@
         <b-field :message="option.price | currency($i18n.locale, product.currency)" class="pricing-option-field">
             <checkout-pricing-option
               :session="session"
-              :guests="guests"
+              :quantities="quantities"
               :total-guests="totalGuests"
               :option="option"
               :max="max"
@@ -63,14 +63,14 @@ export default {
   },
   data() {
     return {
-      guests: []
+      quantities: []
     };
   },
   computed: {
     activeGroupOption() {
       return (
         this.groupOptions.find(option =>
-          this.guests.some(g => g.optionId === option.id)
+          this.quantities.some(g => g.optionId === option.id)
         ) ||
         this.groupOptions.find(
           option =>
@@ -100,7 +100,7 @@ export default {
       const outOfRange = this.groupOptions.filter(
         option => !this.valueInOptionRange(value, option)
       );
-      this.guests = this.guests.filter(
+      this.quantities = this.quantities.filter(
         guest => !outOfRange.some(option => option.id === guest.optionId)
       );
       this.updateGuestCounts(groupOption, value);
@@ -112,21 +112,21 @@ export default {
         optionPrice: option.price,
         optionId: option.id
       };
-      const idx = this.guests.findIndex(g => g.optionId === option.id);
-      this.guests =
+      const idx = this.quantities.findIndex(g => g.optionId === option.id);
+      this.quantities =
         idx > -1
           ? [
-              ...this.guests.slice(0, idx),
+              ...this.quantities.slice(0, idx),
               update,
-              ...this.guests.slice(idx + 1)
+              ...this.quantities.slice(idx + 1)
             ]
-          : [...this.guests, update];
+          : [...this.quantities, update];
 
-      this.$emit("update:guests", this.guests.filter(guest => guest.value > 0));
+      this.$emit("update:quantities", this.quantities.filter(guest => guest.value > 0));
     }
   },
   created: function() {
-    this.guests = this.value;
+    this.quantities = this.value;
   }
 };
 </script>
