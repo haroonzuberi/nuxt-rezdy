@@ -1,7 +1,7 @@
 <template>
     <transition-group name="participants" tag="div">
         <div v-for="(n, i) in totalGuests" :key="n" class="participant box">
-            <h3>{{ product.unitLabel }} {{ n }}</h3>
+            <h3 class="title is-5">{{ product.unitLabel }} {{ n }}</h3>
             <checkout-participant-fields
                 ref="participant"
                 :product="product"

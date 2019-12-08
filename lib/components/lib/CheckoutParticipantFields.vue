@@ -10,7 +10,8 @@
                 required
             />
         </div>
-        <b-collapse :open.sync="expanded" aria-id="optionalParticipantFields" v-if="!hideOptional">
+        <b-collapse :open.sync="open" aria-id="optionalParticipantFields" v-if="!hideOptional">
+            <div class="optional-fields-divider" :data-content="$t('optional')"></div>
             <div class="columns is-multiline">
                 <checkout-field-input
                     class="column"
@@ -20,7 +21,7 @@
                     :field="field"
                 />
             </div>
-            <button v-show="!expanded" class="button is-text is-pulled-right" slot="trigger" aria-controls="optionalParticipantFields">
+            <button v-show="!open" class="button is-text is-pulled-right" slot="trigger" aria-controls="optionalParticipantFields">
                 {{ $t('add-detail') }}
             </button>
         </b-collapse>
@@ -56,6 +57,17 @@ export default {
         }
     },
     computed: {
+        open: {
+            get() {
+                return !this.hasRequiredFields || this.expanded
+            },
+            set(open) {
+                this.expanded = open 
+            }
+        },
+        hasRequiredFields() {
+            return this.product.bookingFields.some(field => field.requiredPerParticipant)
+        },
         requiredFields() {
             return this.participantFields.filter(field => field.requiredPerParticipant)
         },
@@ -97,5 +109,32 @@ export default {
 .column {
     padding-top: 0;
     padding-bottom: 0;
+}
+.optional-fields-divider {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 2rem;
+}
+.optional-fields-divider:before {
+    position: absolute;
+    content: '';
+    top: calc(50% - 1px);
+    left: 0;
+    height: 2px;
+    width: 100%;
+    background-color: var(--light);
+}
+.optional-fields-divider:after {
+    position: absolute;
+    content: attr(data-content);
+    text-transform: uppercase;
+    font-size: 90%;
+    padding: 0.5em 1em;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--dark);
+    background-color: var(--white);
 }
 </style>
