@@ -10,8 +10,10 @@
                     </figure>
                     <div class="media-content">
                         <div class="content">
-                            <h3>{{extra.name}}</h3>
-                            <small>{{ extra.description }}</small>
+                            <h3 class="extra-name">{{extra.name}}</h3>
+                            <p class="extra-description">{{
+                                extra.description | localeParse($i18n.locale)
+                            }}</p>
                         </div>
                     </div>
                 </article>
@@ -28,10 +30,12 @@
 </template>
 
 <script>
+import locale from '../../mixins/locale'
 import CheckoutExtrasOption from './CheckoutExtrasOption.vue'
 
 export default {
     name: 'CheckoutExtras',
+    mixins: [locale],
     components: {
         CheckoutExtrasOption
     },
@@ -80,6 +84,11 @@ export default {
     display: flex;
     justify-content: space-between;
     margin: 12px 0;
+}
+
+.extra-description {
+    font-size: 14px;
+    white-space: pre-wrap;
 }
 
 .checkout-option {
