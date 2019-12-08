@@ -3,7 +3,7 @@
     <h2 class="title">{{$t('select')}} {{ product.unitLabelPlural }}</h2>
     <div class="columns is-multiline">
       <div class="column is-one-third" v-for="option of individualOptions" :key="option.id" >
-        <b-field>
+        <b-field :message="option.price | currency($i18n.locale, product.currency)" class="pricing-option-field">
             <checkout-pricing-option
               :session="session"
               :guests="guests"
@@ -23,9 +23,11 @@
 <i18n src="./lang.json" ></i18n>
 
 <script>
+import locale from '../../mixins/locale'
 import CheckoutPricingOption from './CheckoutPricingOption.vue'
 export default {
   name: "CheckoutPricingSelect",
+  mixins: [locale],
   components: {
       CheckoutPricingOption
   },
@@ -139,6 +141,10 @@ export default {
 .column::v-deep .label {
   text-align: center;
   font-weight: bold;
+}
+
+.pricing-option-field::v-deep .help {
+  text-align: center;
 }
 
 </style>

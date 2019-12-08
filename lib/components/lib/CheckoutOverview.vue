@@ -1,20 +1,33 @@
 <template>
-    <div class="level content">
+    <div class="level">
         <div class="level-left">
-            <h1>
-                {{product.name}}
-            </h1>
-            <div v-for="guest of guests" :key="guest.optionId">
-                {{ guest.value }}x {{ guest.optionLabel }}
-            </div>
-            <div v-for="extra of extras" :key="extra.name">
-                {{ extra.quantity}}x {{ extra.extraPriceType }} {{ extra.name}}
+            <div class="level-item">
+                <div>
+                    <p class="title is-4 has-text-left is-spaced">
+                        {{product.name}}
+                    </p>
+                    <p class="subtitle is-5 has-text-left">
+                        {{$t('from')}}
+                        {{ product.advertisedPrice | currency($i18n.locale, product.currency) }} 
+                        |
+                        
+                        {{ product.durationMinutes | durationInWords($t('hours'), $t('minutes')) }}
+                    </p>
+                    <!-- <div v-for="guest of guests" :key="guest.optionId">
+                        {{ guest.value }}x {{ guest.optionLabel }}
+                    </div>
+                    <div v-for="extra of extras" :key="extra.name">
+                        {{ extra.quantity}}x {{ extra.extraPriceType }} {{ extra.name}}
+                    </div> -->
+                </div>
             </div>
         </div>
         <div class="level-right">
-            <div v-if="session">
-                <p class="title is-5">{{session.startTimeLocal | formatDateLocale("PPPP", $i18n.locale) }}</p>
-                <p class="subtitle is-4 has-text-right">{{session.startTimeLocal | formatDateLocale("p", $i18n.locale) }}</p>
+            <div v-if="session" class="level-item">
+                <div>
+                    <p class="title is-5 is-spaced">{{session.startTimeLocal | formatDateLocale("PPPP", $i18n.locale) }}</p>
+                    <p class="subtitle is-4 has-text-right">{{session.startTimeLocal | formatDateLocale("p", $i18n.locale) }}</p>
+                </div>
             </div>
         </div>
     </div>
@@ -27,6 +40,15 @@ import locale from '../../mixins/locale'
 export default {
     name: 'CheckoutOverview',
     mixins: [locale],
+    filters: {
+        durationInWords(minutes, hourFormat, minFormat) {
+            const h = Math.floor(minutes/60)
+            const hwords = h ? `${h} ${hourFormat || 'hours'} ` : ''
+            const m = minutes % 60
+            const mwords = m ? `${m} ${minFormat || 'minutes'}` : ''
+            return  hwords + mwords;
+        }
+    },
     props: {
         product: {
             type: Object,
@@ -55,3 +77,10 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.title, .subtitle{
+    line-height: 1.1;
+    margin: 0;
+}
+</style>

@@ -1,8 +1,8 @@
 <template>
     <div>
         <h2 class="title">{{$t('select')}} {{$t('date-and-time')}}</h2>
-        <div class="columns">
-            <div class="column has-items-centered">
+        <transition-group tag="div" name="date-time"  class="columns">
+            <div class="column has-items-centered" key="date">
                 <b-datepicker
                     ref="datepicker"
                     inline
@@ -11,11 +11,10 @@
                     :events="events"
                     :selectable-dates="selectableDates"
                     :unselectable-days-of-week="unselectableDaysOfWeek"
-                >
-                    <b-loading :active="loading" :is-full-page="false" />
-                </b-datepicker>
+                ></b-datepicker>
+                <b-loading :active="loading" :is-full-page="false" />
             </div>
-            <div class="column has-items-centered">
+            <div class="column has-items-centered" key="time" v-if="sessionTimes && sessionTimes.length">
                 <div>
                     <p class="content has-text-centered subtitle is-5">
                         {{ $t('choose-time') }}:
@@ -35,7 +34,7 @@
                     </ul>
                 </div>
             </div>
-        </div>
+        </transition-group>
     </div>
 </template>
 
@@ -143,4 +142,18 @@ export default {
     justify-content: center;
     align-items: center;
 }
+
+.columns {
+    position: relative;
+}
+
+.date-time-enter-active, .date-time-leave-active {
+  transition: transform 250ms;
+}
+.date-time-enter, .date-time-leave-to /* .date-time-leave-active below version 2.1.8 */ {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+
 </style>
