@@ -45,23 +45,23 @@
                     />
                 </b-step-item>
                 <b-step-item :label="$t(steps[3].name)" :icon="steps[3].icon">
-                    I'm whatever
+                    (Checkout step)
                 </b-step-item>
             </b-steps>
             <div class="level">
                 <div class="level-left">
                     <b-button class="level-item" @click="$parent.close()">
-                        {{ $t('cancel') }}
-                    </b-button>
-                    <b-button class="level-item" @click="$parent.close()">
                         {{ $t('previous') }}
                     </b-button>
+                    <b-button class="level-item" @click="$parent.close()">
+                        {{ $t('cancel') }}
+                    </b-button>
                 </div>
-                <div class="level-item" v-if="total > 0">
-                    <span v-if="!loadingTotal">
+                <div class="level-item" v-if="total > 0 || loadingTotal">
+                    <span v-if="!loadingTotal" class="checkout-total">
                         {{ total | currency($i18n.locale, product.currency) }}
                     </span>
-                    <span v-else>{{$t('loading')}} ...</span>
+                    <span v-else class="checkout-total-loading">{{$t('loading')}} ...</span>
                 </div>
                 <div class="level-right">
                     <b-button
@@ -230,4 +230,9 @@ export default {
   opacity: 0;
   transform: scale(0.5);
 }
+
+.checkout-total {
+    font-size: 2rem;
+}
+
 </style>
