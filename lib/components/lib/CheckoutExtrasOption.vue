@@ -12,7 +12,11 @@
 </template>
 
 <script>
+import locale from '../../mixins/locale'
+
 export default {
+    name: 'CheckoutExtrasOption',
+    mixins: [locale],
     props: {
         value: {
             type: Number,
