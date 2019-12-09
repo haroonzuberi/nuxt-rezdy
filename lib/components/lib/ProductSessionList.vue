@@ -1,5 +1,5 @@
 <template>
-  <div class="session-list-compact">
+  <div class="session-list">
     <div v-for="(sessions, date) of sessionsByDate" :key="date">
       <slot name="title" v-bind:date="date" v-bind:sessions="sessions">
         {{ date }}
@@ -10,7 +10,14 @@
           :key="productCode"
           class="session-group"
         >
-          <span class="session-product-name">
+          <div class="session-product-image">
+            <figure class="image is-19by9">
+              <slot name="image" v-bind:productCode="productCode" >
+                Image From Rezdy
+              </slot>
+            </figure>
+          </div>
+          <span class="session-product-detail">
             <slot name="product" v-bind:productCode="productCode" v-bind:sessions="sessions">
               {{ productCode }}
             </slot>
@@ -172,4 +179,24 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+.session-group {
+  display: grid;
+  grid-column-gap: 10px;
+  grid-row-gap: 20px;
+  grid-template-rows: auto;
+  grid-template-columns: 1fr 3fr;
+  grid-template-areas:
+    'image session'
+    'image footer';
+}
+.session-product-image {
+  grid-area: image;
+}
+.session-product-detail {
+  grid-area: session;
+}
+.esssion-time-slots {
+  grid-area: footer;
+}
+</style>
