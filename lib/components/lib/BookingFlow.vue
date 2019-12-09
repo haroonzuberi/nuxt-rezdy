@@ -50,7 +50,7 @@
             </b-steps>
             <div class="level">
                 <div class="level-left">
-                    <b-button class="level-item" @click="$parent.close()">
+                    <b-button class="level-item" @click="prev()" :disabled="currentStep === 0">
                         {{ $t('previous') }}
                     </b-button>
                     <b-button class="level-item" @click="$parent.close()">
@@ -174,7 +174,7 @@ export default {
                 .reduce((acc, count) => acc + count, 0);
         },
         totalGuests() {
-            return this.quantities
+            return !this.selectedSession ? 0 : this.quantities
                 .map(
                     option =>
                         option.value * this.selectedSession.priceOptions.find(p => p.id === option.optionId).seatsUsed
@@ -213,7 +213,18 @@ export default {
     },
     methods: {
         next() {
-            this.currentStep = this.currentStep + 1;
+            this.stepBy(1)
+        },
+        prev() {
+            this.stepBy(-1)
+        },
+        stepBy(direction) {
+            this.currentStep = this.currentStep + direction
+            if(this.currentStep === 0) {
+                this.selectedSession = null
+                this.quantities = []
+                this.extras = []
+            }
         }
     }
 }
