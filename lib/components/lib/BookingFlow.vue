@@ -1,6 +1,6 @@
 <template>
-    <div class="section">
-        <div class="container" v-if="product">
+    <div class="section" ref="checkout">
+        <div class="container" v-if="product" >
             <checkout-overview
                 :product="product"
                 :session="selectedSession"
@@ -9,7 +9,7 @@
                 :booking-fields="bookingFields"
                 :extras="extras"
             />
-            <b-steps :has-navigation="false" v-model="currentStep">
+            <b-steps :has-navigation="false" v-model="currentStep" @change="handleStepChange">
                 <b-step-item :label="$t(steps[0].name)" :icon="steps[0].icon">
                     <checkout-session-select
                         :product-code="productCode"
@@ -225,6 +225,12 @@ export default {
                 this.quantities = []
                 this.extras = []
             }
+        },
+        handleStepChange(step) {
+            this.$refs.checkout.parentNode.scroll({
+                top: 0, 
+                left: 0
+            })
         }
     }
 }
