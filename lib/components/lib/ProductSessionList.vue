@@ -12,24 +12,31 @@
         >
           <div class="session-product-image">
             <figure class="image is-19by9">
-              <slot name="image" v-bind:productCode="productCode" >
+              <slot name="image" v-bind:product="productsByCode[productCode]" >
                 Image From Rezdy
               </slot>
             </figure>
           </div>
           <span class="session-product-detail">
-            <slot name="product" v-bind:productCode="productCode" v-bind:sessions="sessions">
+            <slot name="product" v-bind:product="productsByCode[productCode]" v-bind:sessions="sessions">
               {{ productCode }}
             </slot>
           </span>
-          <ul class="session-time-slots">
-            <li v-for="session of group" :key="session.id" class="session-time">
-              <slot name="session" v-bind:session="session" />
-              <b-button type="is-success" @click="addBookingItem(session)" :disabled="!session.seatsAvailable">
-                {{ session.startTimeLocal | formatSessionTime }}
-              </b-button>
-            </li>
-          </ul>
+          <div class="session-product-footer level">
+            <div class="level-left">
+              <slot name="footer" v-bind:product="productsByCode[productCode]" class="level-item" />
+            </div>
+            <div class="level-right">
+              <ul class="level-item">
+                <li v-for="session of group" :key="session.id" class="session-time">
+                  <slot name="session" v-bind:session="session" />
+                  <b-button type="is-success" @click="addBookingItem(session)" :disabled="!session.seatsAvailable">
+                    {{ session.startTimeLocal | formatSessionTime }}
+                  </b-button>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -81,6 +88,7 @@ export default {
   data() {
     return {
       sessions: [],
+      products: [],
       offset: 0,
       loading: false
     }
@@ -96,6 +104,11 @@ export default {
     }
   },
   computed: {
+    productsByCode() {
+      return this.products.reduce((products, product) => {
+        return { ...products, [product.productCode]: product }
+      }, {})
+    },
     endTimeLocal() {
       return format(endOfDay(addWeeks(new Date(), this.weeks)), 'yyyy-MM-dd HH:mm:ss')
     },
@@ -127,6 +140,10 @@ export default {
         limit: this.limit,
         offset: this.offset
       })
+      
+      const { products } = await this.$rezdy.getProducts({productCode})
+      this.products = products
+
       this.loading = false
       return sessions
     },
@@ -196,7 +213,7 @@ export default {
 .session-product-detail {
   grid-area: session;
 }
-.esssion-time-slots {
+.session-product-footer {
   grid-area: footer;
 }
 </style>
