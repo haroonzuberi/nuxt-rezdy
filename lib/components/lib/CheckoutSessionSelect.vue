@@ -14,7 +14,7 @@
                 ></b-datepicker>
                 <b-loading :active="loading" :is-full-page="false" />
             </div>
-            <div class="column has-items-centered" key="time" v-if="sessionTimes && sessionTimes.length">
+            <div class="column has-items-centered" key="time" v-show="sessionTimes && sessionTimes.length">
                 <div>
                     <p class="content has-text-centered subtitle is-5">
                         {{ $t('choose-time') }}:
