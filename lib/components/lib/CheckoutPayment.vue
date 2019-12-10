@@ -18,12 +18,12 @@
         </b-field>
         <b-field :label="$t('expiry-date')" label-position="inside" grouped>
             <b-field>
-                <b-select v-model="expMonth" icon="calendar" placeholder="MM" required>
+                <b-select v-model="expMonth" icon="calendar" :placeholder="$t('month-placeholder')" required>
                     <option v-for="m in 12" :key="m" :value="m">
                         {{ m }} — {{ $t('months')[m-1] }}
                     </option>
                 </b-select>
-                <b-select v-model="expYear" placeholder="YYYY" required>
+                <b-select v-model="expYear" :placeholder="$t('year-placeholder')" required>
                     <option v-for="y in 10" :key="y" :value="now.getFullYear() + y - 1">
                         {{ now.getFullYear() + y - 1 }}
                     </option>
@@ -39,10 +39,36 @@
                 />
             </b-field>
         </b-field>
-
-        <b-button type="is-success" native-type="submit" icon="lock-alt">
-            {{$t('pay')}}
-        </b-button>
+        <div class="payment-options">
+            <b-button type="is-success" native-type="submit" icon="lock-alt">
+                {{$t('pay')}}
+            </b-button>
+            <form action="https://www.2checkout.com/checkout/purchase" method="post">
+  <input name="sid" type="hidden" :value="$rezdy.checkoutOptions.sellerId">
+  <input name="mode" type="hidden" value="2CO">
+  <input name="return_url" type="hidden" value="https://nolimitsadventure.netlify.com/cart/">
+  <input name="li_0_name" type="hidden" value="invoice123">
+  <input name="li_0_price" type="hidden" value="25.99">
+  <input name="card_holder_name" type="hidden" value="Checkout Shopper">
+  <input name="street_address" type="hidden" value="123 Test Address">
+  <input name="street_address2" type="hidden" value="Suite 200">
+  <input name="city" type="hidden" value="Columbus">
+  <input name="state" type="hidden" value="OH">
+  <input name="zip" type="hidden" value="43228">
+  <input name="country" type="hidden" value="USA">
+  <input name="email" type="hidden" value="example@2co.com">
+  <input name="phone" type="hidden" value="614-921-2450">
+  <input name="ship_name" type="hidden" value="Gift Receiver">
+  <input name="ship_street_address" type="hidden" value="1234 Address Road">
+  <input name="ship_street_address2" type="hidden" value="Apartment 123">
+  <input name="ship_city" type="hidden" value="Columbus">
+  <input name="ship_state" type="hidden" value="OH">
+  <input name="ship_zip" type="hidden" value="43235">
+  <input name="ship_country" type="hidden" value="USA">
+  <input name="paypal_direct" type="hidden" value="Y">
+  <input type="submit" value="Submit Payment">
+</form>
+        </div>
     </form>
 </template>
 

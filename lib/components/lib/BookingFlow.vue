@@ -16,7 +16,11 @@
                         :session.sync="selectedSession"
                     />
                 </b-step-item>
-                <b-step-item :label="$t(steps[1].name)" :icon="steps[1].icon">
+                <b-step-item
+                    :label="$t(steps[1].name)"
+                    :icon="steps[1].icon"
+                    :clickable="this.steps[0].valid()"
+                >
                     <checkout-pricing-select
                         v-if="selectedSession"
                         :total-guests="totalGuests"
@@ -38,13 +42,22 @@
                         :valid.sync="bookingFieldsValid"
                     />
                 </b-step-item>
-                <b-step-item :label="$t(steps[2].name)" :icon="steps[2].icon" v-if="hasExtras">
+                <b-step-item
+                    :label="$t(steps[2].name)"
+                    :icon="steps[2].icon"
+                    v-if="hasExtras"
+                    :clickable="this.steps[1].valid()"
+                >
                     <checkout-extras
                         :product="product"
                         :extras.sync="extras"
                     />
                 </b-step-item>
-                <b-step-item :label="$t(steps[3].name)" :icon="steps[3].icon">
+                <b-step-item
+                    :label="$t(steps[3].name)"
+                    :icon="steps[3].icon"
+                    :clickable="this.steps[2].valid()"
+                >
                     <div class="columns">
                         <div class="column">
                             {{$t('summary')}}
@@ -57,9 +70,9 @@
                                 :total-due="totalDue"
                                 :currency="product.currency"
                             />
+                            <checkout-vouchers :vouchers.sync="vouchers" />
                         </div>
                         <div class="column">
-                            <checkout-vouchers :vouchers.sync="vouchers" />
                             <checkout-payment :quote="quote" :total-due="totalDue" />
                         </div>
                     </div>

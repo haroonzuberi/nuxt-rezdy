@@ -55,7 +55,20 @@
         "Postcode/ZIP": "Postcode/ZIP",
         "I agree to receive marketing emails": "I agree to receive marketing emails",
         "How did you hear about us?": "How did you hear about us?",
-        "Special Requirements": "Special Requirements"
+        "Special Requirements": "Special Requirements",
+        "Internet search": "Internet Search",
+        "Friend": "A Friend",
+        "Social Media": "Social Media",
+        "Coupon website": "Coupon Website",
+        "Gift card": "Gift Card",
+        "Brochure": "Brochure",
+        "Signage": "Signage",
+        "TV": "TV",
+        "Radio": "Radio/Podcast",
+        "Press": "Press",
+        "Flyer": "A Handout",
+        "Agent": "Travel Agent",
+        "Other": "Other"
     },
     "it": {
         "cancel": "Annulla",
@@ -115,6 +128,19 @@
         "Postcode/ZIP": "CAP / Zip",
         "I agree to receive marketing emails": "Accetto di ricevere e-mail di marketing",
         "How did you hear about us?": "Come hai saputo di noi?",
-        "Special Requirements": "Requisiti speciali"
+        "Special Requirements": "Requisiti speciali",
+        "Internet search": "Ricerca Internet",
+        "Friend": "Un amico",
+        "Social Media": "Social media",
+        "Coupon website": "Sito Web coupon",
+        "Gift card": "Carta regalo",
+        "Brochure": "Brochure",
+        "Signage": "Segnaletica",
+        "TV": "Televisione",
+        "Radio": "Radio/Podcast",
+        "Press": "Stampa",
+        "Flyer": "Volantino",
+        "Agent": "Agente di viaggi",
+        "Other": "Altro"
     }
 }

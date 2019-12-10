@@ -2,6 +2,7 @@
   <b-field
     :label="$t(field.label)"
     :class="[{ 'is-required': required }, widthClass]"
+    label-position="inside"
   >
     <b-input
       v-if="type === 'String'"
@@ -23,28 +24,31 @@
       v-model="updatedValue"
       :icon="icon"
       :required="required"
-      placeholder="Select..."
+      :placeholder="$t('select') + '…'"
+      expanded
     >
-      <option value="Internet search">Internet search</option>
-      <option value="Friend">Friend</option>
-      <option value="Social Media">Social Media</option>
-      <option value="Coupon website">Coupon website</option>
-      <option value="Gift card">Gift card</option>
-      <option value="Brochure">Brochure</option>
-      <option value="Signage">Signage</option>
-      <option value="TV">TV</option>
-      <option value="Radio">Radio</option>
-      <option value="Press">Press</option>
-      <option value="Flyer">Flyer</option>
-      <option value="Agent">Agent</option>
-      <option value="Other">Other</option>
+      <option value="Internet search">{{$t('Internet search')}}</option>
+      <option value="Friend">{{$t('Friend')}}</option>
+      <option value="Social Media">{{$t('Social Media')}}</option>
+      <option value="Coupon website">{{$t('Coupon website')}}</option>
+      <option value="Gift card">{{$t('Gift card')}}</option>
+      <option value="Brochure">{{$t('Brochure')}}</option>
+      <option value="Signage">{{$t('Signage')}}</option>
+      <option value="TV">{{$t('TV')}}</option>
+      <option value="Radio">{{$t('Radio')}}</option>
+      <option value="Press">{{$t('Press')}}</option>
+      <option value="Flyer">{{$t('Flyer')}}</option>
+      <option value="Agent">{{$t('Agent')}}</option>
+      <option value="Other">{{$t('Other')}}</option>
     </b-select>
     <b-select
       v-else-if="type === 'Language'"
       v-model="updatedValue"
       :icon="icon"
       :required="required"
-      placeholder="Select a language"
+      :placeholder="$t('select') + '…'"
+
+      expanded
     >
       <option value="en">English</option>
       <option value="fr">Français</option>
@@ -69,7 +73,9 @@
       v-model="updatedValue"
       :icon="icon"
       :required="required"
-      placeholder="Select..."
+      :placeholder="$t('select') + '…'"
+
+      expanded
     >
       <option
         v-for="(option, idx) of parseListOptions(
@@ -87,12 +93,15 @@
       v-model="updatedValue"
       :true-value="1"
       :false-value="0"
+
     />
     <b-datepicker
       v-else-if="type === 'Date'"
       v-model="updatedValue"
       :month-names="monthNames"
       icon="calendar"
+      :max-date="maxDate"
+
     />
     <div v-else>UNKNOWN FIELD TYPE: {{ type }}</div>
   </b-field>
@@ -123,6 +132,9 @@ export default {
     };
   },
   computed: {
+    maxDate() {
+      return this.field.label.toLowerCase() === 'date of birth' ? new Date() : null
+    },
     monthNames() {
       return Object.values(this.$t('months'))
     },
@@ -148,7 +160,7 @@ export default {
       return null;
     },
     widthClass() {
-      return ["First Name", "Last Name", "Email", "Phone", "Mobile", "Date"].some(
+      return ["First Name", "Last Name", "Email", "Phone", "Mobile", "Date", "List"].some(
         label => this.field.label === label || this.type === label
       )
         ? "is-half"
@@ -202,10 +214,9 @@ export default {
 </script>
 
 <style scoped>
-.is-required::v-deep .label {
-  font-weight: bold;
+.vue-tel-input::v-deep input{
+  background-color:  transparent;
 }
-
 .vue-tel-input:focus-within {
   border-color: var(--primary-light);
   box-shadow: 0 0 0 0 rgba(189, 189, 189, 0.25);

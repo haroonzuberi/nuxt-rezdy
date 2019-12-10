@@ -106,4 +106,9 @@ export default {
     padding-top: 0;
     padding-bottom: 0;
 }
+
+.column.is-floating-in-label::v-deep .label,
+.column.is-floating-label::v-deep .label{
+    margin: 0 10px;
+}
 </style>
