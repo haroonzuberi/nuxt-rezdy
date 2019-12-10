@@ -60,6 +60,7 @@
                         </div>
                         <div class="column">
                             <checkout-vouchers :vouchers.sync="vouchers" />
+                            <checkout-payment :quote="quote" :total-due="totalDue" />
                         </div>
                     </div>
                 </b-step-item>
@@ -110,6 +111,7 @@ import CheckoutExtras from './CheckoutExtras.vue'
 import CheckoutOverview from './CheckoutOverview.vue'
 import CheckoutVouchers from './CheckoutVouchers.vue'
 import CheckoutOrderSummary from './CheckoutOrderSummary.vue'
+import CheckoutPayment from './CheckoutPayment.vue'
 
 export default {
     name: 'ProductBookingFlow',
@@ -121,7 +123,8 @@ export default {
         CheckoutExtras,
         CheckoutOverview,
         CheckoutVouchers,
-        CheckoutOrderSummary
+        CheckoutOrderSummary,
+        CheckoutPayment
     },
     props: {
         productCode: {
@@ -224,7 +227,7 @@ export default {
             this.totalDue = totalDue
             this.totalAmount = totalAmount
             this.totalPaid = totalPaid
-            this.taxesAndFees = items.reduce((total, item) => total + (item.totalItemTax || 0), 0)
+            this.taxesAndFees = (items || []).reduce((total, item) => total + (item.totalItemTax || 0), 0)
             this.loadingTotal = false
         }, 200) 
     },

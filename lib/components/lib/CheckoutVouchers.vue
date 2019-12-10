@@ -1,11 +1,11 @@
 <template>
     <div>
-        <b-button v-if="!show" type="is-primary" @click="show = true">
+        <b-button v-if="!show" type="is-primary" expanded @click="show = true">
             {{ $t('add-voucher') }}
         </b-button>
         <form v-if="show" @submit.prevent="handleVoucher">
             <b-field :message="error ? error.errorMessage : null" :type="error ? 'is-danger' : null">
-                <b-input placeholder="Enter Voucher, Coupon, or Promo Code" expanded v-model="voucherCode" @focus="clearError" />
+                <b-input :placeholder="$t('voucher-placeholder')" expanded v-model="voucherCode" @focus="clearError" />
                 <b-button type="is-primary" native-type="submit" :loading="loading" :disabled="!voucherCode">
                     {{ $t('apply') }}
                 </b-button>
@@ -26,6 +26,8 @@
         </table>
     </div>
 </template>
+
+<i18n src="./lang.json"></i18n>
 
 <script>
 export default {
