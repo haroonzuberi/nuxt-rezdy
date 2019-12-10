@@ -45,7 +45,23 @@
                     />
                 </b-step-item>
                 <b-step-item :label="$t(steps[3].name)" :icon="steps[3].icon">
-                    (Checkout step)
+                    <div class="columns">
+                        <div class="column">
+                            Order Summary
+                            <checkout-order-summary
+                                :quantities="quantities"
+                                :extras="extras"
+                                :total-amount="totalAmount"
+                                :taxes-and-fees="taxesAndFees"
+                                :total-paid="totalPaid"
+                                :total-due="totalDue"
+                                :currency="product.currency"
+                            />
+                        </div>
+                        <div class="column">
+                            <checkout-vouchers :vouchers.sync="vouchers" />
+                        </div>
+                    </div>
                 </b-step-item>
             </b-steps>
             <div class="level">
@@ -57,9 +73,9 @@
                         {{ $t('cancel') }}
                     </b-button>
                 </div>
-                <div class="level-item" v-if="total > 0 || loadingTotal">
+                <div class="level-item" v-if="totalDue > 0 || loadingTotal">
                     <span v-if="!loadingTotal" class="checkout-total">
-                        {{ total | currency($i18n.locale, product.currency) }}
+                        {{ totalDue | currency($i18n.locale, product.currency) }}
                     </span>
                     <span v-else class="checkout-total-loading">{{$t('loading')}} ...</span>
                 </div>
@@ -92,6 +108,8 @@ import CheckoutBookingFields from './CheckoutBookingFields.vue'
 import CheckoutParticipants from './CheckoutParticipants.vue'
 import CheckoutExtras from './CheckoutExtras.vue'
 import CheckoutOverview from './CheckoutOverview.vue'
+import CheckoutVouchers from './CheckoutVouchers.vue'
+import CheckoutOrderSummary from './CheckoutOrderSummary.vue'
 
 export default {
     name: 'ProductBookingFlow',
@@ -101,7 +119,9 @@ export default {
         CheckoutBookingFields,
         CheckoutParticipants,
         CheckoutExtras,
-        CheckoutOverview
+        CheckoutOverview,
+        CheckoutVouchers,
+        CheckoutOrderSummary
     },
     props: {
         productCode: {
@@ -124,8 +144,13 @@ export default {
             participantsValid: false,
             bookingFields: [],
             bookingFieldsValid: false,
-            total: 0,
+            totalDue: 0,
+            totalAmount: 0,
+            totalPaid: 0,
+            taxesAndFees: 0,
+            extrasTotal: 0,
             extras: [],
+            vouchers: [],
             steps: [
                 {
                     name: 'schedule',
@@ -155,17 +180,12 @@ export default {
         valid() {
             return this.steps[this.currentStep].valid()
         },
-        productTotal() {
-            return this.quantities.reduce(
-                (total, quantity) => total + quantity.value * quantity.optionPrice,
-                0
-            )
-        },
         quote() {
             return {
                 session: this.selectedSession,
                 quantities: this.quantities,
-                extras: this.extras
+                extras: this.extras,
+                vouchers: this.vouchers
             }
         },
         totalQuantity() {
@@ -200,7 +220,11 @@ export default {
         quote: debounce(async function(value) {
             this.loadingTotal = true
             const { booking } = await this.$rezdy.getQuote(value)
-            this.total = booking ? booking.totalAmount : 0
+            const { totalDue, totalAmount, items, totalPaid } = booking
+            this.totalDue = totalDue
+            this.totalAmount = totalAmount
+            this.totalPaid = totalPaid
+            this.taxesAndFees = items.reduce((total, item) => total + (item.totalItemTax || 0), 0)
             this.loadingTotal = false
         }, 200) 
     },
@@ -251,5 +275,4 @@ export default {
 .checkout-total {
     font-size: 2rem;
 }
-
 </style>
