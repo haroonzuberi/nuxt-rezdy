@@ -47,7 +47,7 @@
                 <b-step-item :label="$t(steps[3].name)" :icon="steps[3].icon">
                     <div class="columns">
                         <div class="column">
-                            Order Summary
+                            {{$t('summary')}}
                             <checkout-order-summary
                                 :quantities="quantities"
                                 :extras="extras"

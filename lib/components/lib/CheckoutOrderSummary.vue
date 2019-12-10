@@ -1,35 +1,37 @@
 <template>
     <table class="order-summary-table table is-small is-fullwidth">
         <tr>
-            <th>Items</th>
+            <th>{{ $t('summary-items') }}</th>
             <td>{{ productTotal | currency($i18n.locale, currency) }}</td>
         </tr>
         <tr v-if="extrasTotal">
-            <th>Extras</th>
+            <th>{{ $t('summary-extras') }}</th>
             <td>{{ extrasTotal | currency($i18n.locale, currency) }}</td>
         </tr>
         <tr v-if="taxesAndFees">
-            <th>Total before taxes and fees</th>
+            <th>{{ $t('summary-pre-tax') }}</th>
             <td>{{ (totalAmount - taxesAndFees)  | currency($i18n.locale, currency) }}</td>
         </tr>
         <tr v-if="taxesAndFees">
-            <th>Taxes and fees</th>
+            <th>{{ $t('summary-taxes') }}</th>
             <td>{{ taxesAndFees | currency($i18n.locale, currency) }}</td>
         </tr>
         <tr>
-            <th>Order Total</th>
+            <th>{{ $t('summary-order-total') }}</th>
             <td>{{ totalAmount | currency($i18n.locale, currency) }}</td>
         </tr>
         <tr v-if="totalPaid">
-            <th>Coupons, Vouchers, and Promo Codes</th>
+            <th>{{ $t('summary-vouchers') }}</th>
             <td>- {{ totalPaid | currency($i18n.locale, currency) }}</td>
         </tr>
         <tr class="total-due">
-            <th>Total Due</th>
+            <th>{{ $t('summary-total-due') }}</th>
             <td>{{ totalDue | currency($i18n.locale, currency) }}</td>
         </tr>
     </table>
 </template>
+
+<i18n src="./lang.json"></i18n>
 
 <script>
 export default {

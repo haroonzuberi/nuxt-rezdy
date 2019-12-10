@@ -1,7 +1,7 @@
 <template>
     <form @submit.prevent="submitPayment" v-if="quote">
         <label class="label">
-            Payment Details
+            {{ $t('payment-heading') }}
         </label>
         <b-field :label="$t('card-number')" label-position="on-border">
             <b-input
