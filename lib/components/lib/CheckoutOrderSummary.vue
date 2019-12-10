@@ -16,7 +16,7 @@
             <th>{{ $t('summary-taxes') }}</th>
             <td>{{ taxesAndFees | currency($i18n.locale, currency) }}</td>
         </tr>
-        <tr>
+        <tr v-if="totalAmount !== totalDue">
             <th>{{ $t('summary-order-total') }}</th>
             <td>{{ totalAmount | currency($i18n.locale, currency) }}</td>
         </tr>
