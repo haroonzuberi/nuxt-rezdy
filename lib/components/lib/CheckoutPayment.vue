@@ -43,32 +43,8 @@
             <b-button type="is-success" native-type="submit" icon="lock-alt">
                 {{$t('pay')}}
             </b-button>
-            <form action="https://www.2checkout.com/checkout/purchase" method="post">
-  <input name="sid" type="hidden" :value="$rezdy.checkoutOptions.sellerId">
-  <input name="mode" type="hidden" value="2CO">
-  <input name="return_url" type="hidden" value="https://nolimitsadventure.netlify.com/cart/">
-  <input name="li_0_name" type="hidden" value="invoice123">
-  <input name="li_0_price" type="hidden" value="25.99">
-  <input name="card_holder_name" type="hidden" value="Checkout Shopper">
-  <input name="street_address" type="hidden" value="123 Test Address">
-  <input name="street_address2" type="hidden" value="Suite 200">
-  <input name="city" type="hidden" value="Columbus">
-  <input name="state" type="hidden" value="OH">
-  <input name="zip" type="hidden" value="43228">
-  <input name="country" type="hidden" value="USA">
-  <input name="email" type="hidden" value="example@2co.com">
-  <input name="phone" type="hidden" value="614-921-2450">
-  <input name="ship_name" type="hidden" value="Gift Receiver">
-  <input name="ship_street_address" type="hidden" value="1234 Address Road">
-  <input name="ship_street_address2" type="hidden" value="Apartment 123">
-  <input name="ship_city" type="hidden" value="Columbus">
-  <input name="ship_state" type="hidden" value="OH">
-  <input name="ship_zip" type="hidden" value="43235">
-  <input name="ship_country" type="hidden" value="USA">
-  <input name="paypal_direct" type="hidden" value="Y">
-  <input type="submit" value="Submit Payment">
-</form>
         </div>
+        <b-loading :active.sync="processing" :is-full-page="false" />
     </form>
 </template>
 
@@ -89,11 +65,12 @@ export default {
     },
     data() {
         return {
-            ccNo: '',
-            cvv: '',
-            expMonth: null,
-            expYear: null,
-            now: new Date()
+            ccNo: '4000000000000002',
+            cvv: '123',
+            expMonth: '11',
+            expYear: '2021',
+            now: new Date(),
+            processing: false
         }
     },
     computed: {
@@ -124,47 +101,41 @@ export default {
         }
     },
     methods: {
-        submitPayment() {
-            const checkout = {
+        async submitPayment() {
+            const { ccNo, cvv, expMonth, expYear } = this;
+            const data = {
                 ...this.quote,
                 payments: {
                     type: 'CREDITCARD',
                     amount: this.totalDue,
                     date: (new Date()).toISOString(), // TODO: this would be best done on server!
                     label: 'Payment processed by 2Checkout' // TODO: this would be best done on server!
-                }
-            }
-            console.log('checkout', checkout)
-            this.createToken()
-            // const { booking } = await this.$rezdy.checkout(checkout)
-        },
-        async createToken() {
-            if (process.client) {
-                const { TCO } = window;
-                const { ccNo, cvv, expMonth, expYear } = this;
-                const { sellerId, publishableKey } = this.$rezdy.checkoutOptions
-                // This will vary depending on provider
-                const params = {
-                    sellerId,
-                    publishableKey,
+                },
+                creditCard: {
                     ccNo,
                     cvv,
                     expMonth,
                     expYear
                 }
-                const test = await this.requestToken(params)
-                console.log('response', test);
             }
-        },
-        requestToken(params) {
-            const mode = process.env.NODE_ENV !== 'development' ? 'production' : 'sandbox'
-            return new Promise((resolve, reject) => {
-                TCO.loadPubKey(mode, function() {
-                    console.log('mode', mode)
-                    console.log(params);
-                    TCO.requestToken(resolve, reject, params)
+
+            this.processing = true
+
+            const {error, checkout, booking } = await this.$rezdy.checkout(data)
+
+            if(error) {
+                this.$buefy.toast.open({
+                    message: error.errorMsg,
+                    type: 'is-danger'
                 })
-            })    
+            } else {
+                this.$buefy.toast.open({
+                    message: 'Payment success!',
+                    type: 'is-success'
+                })
+            }
+
+            this.processing = false
         }
     },
     head() {
