@@ -13,13 +13,16 @@
           <div class="session-product-image">
             <figure class="image is-19by9">
               <slot name="image" v-bind:product="productsByCode[productCode]" >
-                Image From Rezdy
+                <img :src="productsByCode[productCode].images[0].thumbnailUrl" />
               </slot>
             </figure>
           </div>
           <span class="session-product-detail">
             <slot name="product" v-bind:product="productsByCode[productCode]" v-bind:sessions="sessions">
-              {{ productCode }}
+              <div class="content">
+                <h4>{{ productsByCode[productCode].name }}</h4>
+                <p>{{ productsByCode[productCode].shortDescription }}</p>
+              </div>
             </slot>
           </span>
           <div class="session-product-footer level">
@@ -30,7 +33,7 @@
               <ul class="level-item">
                 <li v-for="session of group" :key="session.id" class="session-time">
                   <slot name="session" v-bind:session="session" />
-                  <b-button type="is-success" @click="addBookingItem(session)" :disabled="!session.seatsAvailable">
+                  <b-button type="is-success" size="is-medium" @click="addBookingItem(session)" :disabled="!session.seatsAvailable">
                     {{ session.startTimeLocal | formatSessionTime }}
                   </b-button>
                 </li>
