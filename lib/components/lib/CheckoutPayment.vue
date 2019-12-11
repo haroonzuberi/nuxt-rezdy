@@ -1,8 +1,5 @@
 <template>
     <form @submit.prevent="submitPayment" v-if="quote">
-        <label class="label">
-            {{ $t('payment-heading') }}
-        </label>
         <b-field :label="$t('card-number')" label-position="on-border">
             <b-input
                 v-model="ccNo" 
@@ -137,6 +134,9 @@ export default {
 
             this.processing = false
         }
+    },
+    mounted() {
+        console.log('MOUNTED')
     },
     head() {
         return {
