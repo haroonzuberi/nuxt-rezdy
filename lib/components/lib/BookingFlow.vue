@@ -60,7 +60,7 @@
                 >
                     <div class="columns">
                         <div class="column">
-                            {{$t('summary')}}
+                            <h2 class="title is-4">{{$t('summary')}}</h2>
                             <checkout-order-summary
                                 :quantities="quantities"
                                 :extras="extras"
@@ -73,6 +73,7 @@
                             <checkout-vouchers :vouchers.sync="vouchers" />
                         </div>
                         <div class="column">
+                            <h2 class="title is-4">{{ $t('payment-heading') }}</h2>
                             <checkout-payment :quote="quote" :total-due="totalDue" />
                         </div>
                     </div>
