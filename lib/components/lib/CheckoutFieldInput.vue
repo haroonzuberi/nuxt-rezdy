@@ -2,12 +2,19 @@
   <b-field
     :label="$t(field.label)"
     :class="[{ 'is-required': required }, widthClass]"
-    label-position="inside"
+    :label-position="type === 'Boolean' ? null : 'inside'"
   >
     <b-input
       v-if="type === 'String'"
       v-model="updatedValue"
       :type="field.label === 'Email' ? 'email' : 'text'"
+      :icon="icon"
+      :required="required"
+    />
+    <b-input
+      v-else-if="type === 'Textarea'"
+      v-model="updatedValue"
+      type="textarea"
       :icon="icon"
       :required="required"
     />
@@ -140,6 +147,8 @@ export default {
     },
     type() {
       switch (this.field.label) {
+        case "Special Requirements":
+          return "Textarea"
         case "Preferred Language":
           return "Language"
         case "How did you hear about us?":
