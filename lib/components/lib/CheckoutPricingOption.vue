@@ -22,7 +22,7 @@ export default {
             type: Object,
             default: () => null
         },
-        guests: {
+        quantities: {
             type: Array,
             default: () => []
         },
@@ -46,8 +46,9 @@ export default {
     computed: {
         optionValue: {
             get() {
-                const guest = this.guests.find(v => v.optionId === this.option.id);
-                return guest ? +guest.value : 0
+                if(!this.quantities) return 0
+                const quantity = this.quantities.find(v => v.optionId === this.option.id);
+                return quantity ? +quantity.value : 0
             },
             set(value) {
                 this.$emit('input', value)
@@ -66,7 +67,7 @@ export default {
                     seatsAvailable,
                     this.max
                 );
-            const current = this.guests.find(guest => this.option.id === guest.optionId);
+            const current = this.quantities.find(quantity => this.option.id === quantity.optionId);
             const currentValue =
                 (current ? +current.value : 0) * (this.option.seatsUsed || 1);
             const max = available - (available % this.option.seatsUsed) - this.totalGuests + currentValue
