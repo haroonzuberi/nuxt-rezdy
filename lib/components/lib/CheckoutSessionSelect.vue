@@ -42,7 +42,8 @@
 <i18n src="./lang.json"></i18n>
 
 <script>
-import { parseISO, format, isSameDay } from 'date-fns'
+import { parseISO, format, isSameDay, addMinutes } from 'date-fns'
+import { utcToZonedTime } from 'date-fns-tz'
 import locale from '../../mixins/locale'
 import debounce from 'lodash/debounce'
 
@@ -82,7 +83,8 @@ export default {
             return format(new Date(this.year, this.month + 1), 'yyyy-MM-dd HH:mm:ss')
         },
         selectableDates() {
-            return this.sessions.map(session => parseISO(session.startTimeLocal))
+            return this.sessions
+                .map(session => parseISO(session.startTimeLocal))
         },
         unselectableDaysOfWeek() {
             return this.selectableDates.length ? [] : [0,1,2,3,4,5,6]
@@ -119,7 +121,13 @@ export default {
                 endTimeLocal: this.endTimeLocal,
                 rspc: 1
             })
-            this.sessions = sessions
+            this.sessions = sessions.filter(session => {
+                const nowPlusNoticeTz = utcToZonedTime(
+                    addMinutes(new Date(), this.product.minimumNoticeMinutes),
+                    this.product.timezone
+                )
+                return parseISO(session.startTime) > nowPlusNoticeTz
+            })
             this.loading = false
             return sessions
         },
