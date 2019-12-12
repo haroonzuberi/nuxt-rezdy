@@ -81,7 +81,7 @@
             </b-steps>
             <div class="level">
                 <div class="level-left">
-                    <b-button class="level-item" @click="prev()" :disabled="currentStep === 0">
+                    <b-button class="level-item" type="is-success" outlined @click="prev()" :disabled="currentStep === 0">
                         {{ $t('previous') }}
                     </b-button>
                     <b-button class="level-item" @click="$parent.close()">
