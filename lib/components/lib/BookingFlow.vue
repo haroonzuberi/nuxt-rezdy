@@ -10,12 +10,16 @@
                 :extras="extras"
             />
             <b-steps :has-navigation="false" v-model="currentStep" @change="handleStepChange">
+
+                <!-- STEP 1: Session Select -->
                 <b-step-item :label="$t(steps[0].name)" :icon="steps[0].icon">
                     <checkout-session-select
-                        :product-code="productCode"
+                        :product="product"
                         :session.sync="selectedSession"
                     />
                 </b-step-item>
+
+                <!-- STEP 2: Quantities / Booking Info -->
                 <b-step-item
                     :label="$t(steps[1].name)"
                     :icon="steps[1].icon"
@@ -42,6 +46,8 @@
                         :valid.sync="bookingFieldsValid"
                     />
                 </b-step-item>
+
+                <!-- STEP 3: Extras -->
                 <b-step-item
                     :label="$t(steps[2].name)"
                     :icon="steps[2].icon"
@@ -53,6 +59,8 @@
                         :extras.sync="extras"
                     />
                 </b-step-item>
+
+                <!-- STEP 4: Payment -->
                 <b-step-item
                     :label="$t(steps[3].name)"
                     :icon="steps[3].icon"

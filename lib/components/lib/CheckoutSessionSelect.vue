@@ -7,6 +7,7 @@
                     ref="datepicker"
                     inline
                     v-model="selectedDate"
+                    nearby-selectable-month-days
                     :month-names="monthNames"
                     :events="events"
                     :selectable-dates="selectableDates"
@@ -49,9 +50,9 @@ export default {
     name: 'CheckoutSessionSelect',
     mixins: [locale],
     props: {
-        productCode: {
-            type: String,
-            default: null
+        product: {
+            type: Object,
+            default: () => null
         },
         session: {
             type: Object,
@@ -68,6 +69,9 @@ export default {
         }
     },
     computed: {
+        productCode() {
+            return this.product.productCode
+        },
         sessionTimes() {
             return this.sessions.filter(session => isSameDay(parseISO(session.startTimeLocal), this.selectedDate))
         },
