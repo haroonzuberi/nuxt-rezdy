@@ -219,4 +219,8 @@ export default {
 .session-product-footer {
   grid-area: footer;
 }
+
+.session-time {
+  padding: 4px;
+}
 </style>
