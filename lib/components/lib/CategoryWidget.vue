@@ -8,11 +8,11 @@
                 frameborder="0"
                 class="rezdy"
                 :src="iframeSrc"
-                @load="ready = true"
+                @load="loading = false"
             >
             </iframe>
         </client-only>
-        <b-loading slot="placeholder" :active="!ready" />
+        <b-loading slot="placeholder" :active="loading" :is-full-page="false" />
     </div>
 </template>
 <script>
@@ -26,7 +26,8 @@ export default {
     },
     data() {
         return {
-            ready: false
+            ready: false,
+            loading: true
         }
     },
     computed: {
@@ -34,8 +35,12 @@ export default {
             return `https://${this._rezdyOptions.companyAlias}.rezdy.com/catalog/${this.category}/rentals?iframe=true`
         }
     },
+    mounted() {
+        this.ready = true;
+    },
     beforeDestroy() {
         // remove rezdy scripts
+        if (!rzdApp) return
         rzdApp.shutdown()
         document.removeEventListener('load', iframeResizeHandler);
         document.querySelectorAll('[id^="rzd-"]').forEach(el => el.remove());
