@@ -7,10 +7,12 @@
                 height="1000px"
                 frameborder="0"
                 class="rezdy"
-                :src="iframeSrc">
+                :src="iframeSrc"
+                @load="ready = true"
+            >
             </iframe>
-            <!-- <b-loading slot="placeholder" active /> -->
         </client-only>
+        <b-loading slot="placeholder" :active="!ready" />
     </div>
 </template>
 <script>
@@ -27,9 +29,6 @@ export default {
             ready: false
         }
     },
-    mounted() {
-        this.ready = true
-    },
     computed: {
         iframeSrc() {
             return `https://${this._rezdyOptions.companyAlias}.rezdy.com/catalog/${this.category}/rentals?iframe=true`
@@ -37,16 +36,9 @@ export default {
     },
     beforeDestroy() {
         // remove rezdy scripts
-        console.log(rzdApp.shutdown());
-
+        rzdApp.shutdown()
         document.removeEventListener('load', iframeResizeHandler);
-        document.querySelectorAll('[id^="rzd-"]').forEach(el => {
-            el.remove()
-            /* const clone = el.cloneNode(true)
-            el.parentNode.replaceChild(clone, el)
-            clone.remove() */
-        });
-
+        document.querySelectorAll('[id^="rzd-"]').forEach(el => el.remove());
         rzdApp = null
     },
     head() {

@@ -257,8 +257,10 @@ export default {
         if(this.session) {
             this.selectedSession = this.session
         }
-        const { products } = await this.$parent.$rezdy.getProducts({productCode: [this.productCode]})
-        this.product = products[0]
+
+        const { product } = await this.$parent.$rezdy.getProductByCode(this.productCode)
+        
+        this.product = product
     },
     methods: {
         next() {

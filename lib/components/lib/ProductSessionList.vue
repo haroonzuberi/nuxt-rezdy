@@ -12,22 +12,22 @@
         >
           <div class="session-product-image">
             <figure class="image is-19by9">
-              <slot name="image" v-bind:product="productsByCode[productCode]" >
-                <img :src="productsByCode[productCode].images[0].thumbnailUrl" />
+              <slot name="image" v-bind:product="products[productCode]" >
+                <img :src="products[productCode].images[0].thumbnailUrl" />
               </slot>
             </figure>
           </div>
           <span class="session-product-detail">
-            <slot name="product" v-bind:product="productsByCode[productCode]" v-bind:sessions="sessions">
+            <slot name="product" v-bind:product="products[productCode]" v-bind:sessions="sessions">
               <div class="content">
-                <h4>{{ productsByCode[productCode].name }}</h4>
-                <p>{{ productsByCode[productCode].shortDescription }}</p>
+                <h4>{{ products[productCode].name }}</h4>
+                <p>{{ products[productCode].shortDescription }}</p>
               </div>
             </slot>
           </span>
           <div class="session-product-footer level">
             <div class="level-left">
-              <slot name="footer" v-bind:product="productsByCode[productCode]" class="level-item" />
+              <slot name="footer" v-bind:product="products[productCode]" class="level-item" />
             </div>
             <div class="level-right">
               <ul class="level-item">
@@ -107,11 +107,6 @@ export default {
     }
   },
   computed: {
-    productsByCode() {
-      return this.products.reduce((products, product) => {
-        return { ...products, [product.productCode]: product }
-      }, {})
-    },
     endTimeLocal() {
       return format(endOfDay(addWeeks(new Date(), this.weeks)), 'yyyy-MM-dd HH:mm:ss')
     },
