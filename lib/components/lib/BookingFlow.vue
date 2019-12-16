@@ -40,6 +40,9 @@
                         :participants.sync="participants"
                         :valid.sync="participantsValid"
                     />
+                    <h3 class="title is-5" style="margin-top: 2rem">
+                        {{$t('contact-info')}}
+                    </h3>
                     <checkout-booking-fields
                         :product="product"
                         :fields.sync="bookingFields"
