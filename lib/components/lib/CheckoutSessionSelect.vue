@@ -15,7 +15,7 @@
                 ></b-datepicker>
                 <b-loading :active="loading" :is-full-page="false" />
             </div>
-            <div class="column has-items-centered" key="time" v-show="sessionTimes && sessionTimes.length">
+            <div class="column has-items-centered" key="time" v-show="showSessionSelect">
                 <div>
                     <p class="content has-text-centered subtitle is-5">
                         {{ $t('choose-time') }}:
@@ -94,9 +94,23 @@ export default {
                 date,
                 type: 'is-success'
             })) 
+        },
+        hasDaySelection() {
+            if(this.sessionTimes.length === 1) {
+                const [session] = this.sessionTimes
+                const date = parseISO(session.startTimeLocal)
+                return date.getHours() + date.getMinutes() + date.getSeconds() === 0
+            }
+            return false
+        },
+        showSessionSelect() {
+            return this.sessionTimes && this.sessionTimes.length && !this.hasDaySelection
         }
     },
     watch: {
+        sessionTimes(sessions) {
+            if(this.hasDaySelection) this.selectSession(sessions[0])
+        },
         startTimeLocal(startTimeLocal) {
             this.getSessionsDebounced()
         },

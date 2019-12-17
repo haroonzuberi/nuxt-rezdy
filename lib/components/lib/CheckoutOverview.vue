@@ -26,7 +26,7 @@
             <div v-if="session" class="level-item">
                 <div>
                     <p class="title is-5 is-spaced">{{session.startTimeLocal | formatDateLocale("PPPP", $i18n.locale) }}</p>
-                    <p class="subtitle is-4 has-text-right">{{session.startTimeLocal | formatDateLocale("p", $i18n.locale) }}</p>
+                    <p class="subtitle is-4 has-text-right" v-if="showTime">{{session.startTimeLocal | formatDateLocale("p", $i18n.locale) }}</p>
                 </div>
             </div>
         </div>
@@ -34,7 +34,7 @@
 </template>
 
 <script>
-
+import { parseISO } from 'date-fns'
 import locale from '../../mixins/locale'
 
 export default {
@@ -73,6 +73,13 @@ export default {
         extras: {
             type: Array,
             default: () => {}
+        }
+    },
+    computed: {
+        showTime() {
+            const time = parseISO(this.session.startTimeLocal)
+            const isMidnight = time.getHours() + time.getMinutes() + time.getSeconds() === 0
+            return !isMidnight
         }
     }
 }
