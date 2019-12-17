@@ -143,6 +143,13 @@
         "Press": "Stampa",
         "Flyer": "Volantino",
         "Agent": "Agente di viaggi",
-        "Other": "Altro"
+        "Other": "Altro",
+        "Fishing": "Pesca",
+        "Diving": "Immersione",
+        "Jet Skiing": "Jet Ski",
+        "Scuba Diving & Snorkeling": "Immersioni e snorkeling",
+        "Uncategorized": "Non categorizzato",
+        "Horse Riding": "Equitazione",
+        "Cultural Tours": "Tour culturali"
     }
 }
