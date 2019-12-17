@@ -216,6 +216,11 @@ export default {
           { name: "Mrs.", value: "MRSS" },
           { name: "Miss", value: "MISS" }
         ];
+      if (type === "Gender")
+        return [
+          { name: "Male", value: "MALE" },
+          { name: "Female", value: "FEMALE" }
+        ]
       return items.split(/\r\n|\r|\n/g);
     }
   }
