@@ -22,7 +22,7 @@
         </tr>
         <tr v-if="totalPaid">
             <th>{{ $t('summary-vouchers') }}</th>
-            <td>- {{ totalPaid | currency($i18n.locale, currency) }}</td>
+            <td style="white-space: nowrap">- {{ totalPaid | currency($i18n.locale, currency) }}</td>
         </tr>
         <tr class="total-due">
             <th>{{ $t('summary-total-due') }}</th>

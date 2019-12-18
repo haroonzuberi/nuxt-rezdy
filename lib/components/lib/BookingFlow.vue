@@ -1,7 +1,8 @@
 <template>
-    <div class="section" ref="checkout">
+    <div class="section booking-flow" ref="checkout">
         <div class="container" v-if="product" >
             <checkout-overview
+                id="booking-checkout-overview"
                 :product="product"
                 :session="selectedSession"
                 :quantities="quantities"
@@ -90,24 +91,24 @@
                     </div>
                 </b-step-item>
             </b-steps>
-            <div class="level">
+            <div id="booking-flow-controls" class="level">
                 <div class="level-left">
-                    <b-button class="level-item" type="is-success" outlined @click="prev()" :disabled="currentStep === 0">
+                    <b-button class="level-item booking-control-previous" type="is-success" outlined @click="prev()" :disabled="currentStep === 0">
                         {{ $t('previous') }}
                     </b-button>
-                    <b-button class="level-item" @click="$parent.close()">
+                    <b-button class="level-item booking-control-next" @click="$parent.close()">
                         {{ $t('cancel') }}
                     </b-button>
                 </div>
                 <div class="level-item" v-if="totalDue > 0 || loadingTotal">
-                    <span v-if="!loadingTotal" class="checkout-total">
+                    <span v-if="!loadingTotal" class="booking-checkout-total">
                         {{ totalDue | currency($i18n.locale, product.currency) }}
                     </span>
-                    <span v-else class="checkout-total-loading">{{$t('loading')}} ...</span>
+                    <span v-else>{{$t('loading')}} ...</span>
                 </div>
                 <div class="level-right">
                     <b-button
-                        class="level-item"
+                        class="level-item booking-control-continue"
                         type="is-success"
                         size="is-large"
                         @click="next()"
@@ -290,9 +291,9 @@ export default {
 }
 </script>
 
-<style scoped>
-.section {
-    min-height: 300px
+<style>
+.booking-flow {
+    min-height: 300px;
 }
 .participants-enter-active, .participants-leave-active {
   transition: all 250ms ease-in-out;
@@ -302,7 +303,45 @@ export default {
   transform: scale(0.5);
 }
 
-.checkout-total {
+.booking-checkout-total {
     font-size: 2rem;
+}
+
+@media only screen and (max-width: 600px) {
+    .booking-flow {
+        padding: 1rem 0.75rem;
+    }
+    .booking-flow .title {
+        font-size: 2rem;
+    }
+
+    #booking-checkout-overview {
+        display: none;
+    }
+
+    #booking-flow-controls {
+        display: flex;
+        flex-direction: column;
+    }
+
+    #booking-flow-controls .level-right {
+        width: 100%;
+        order: 1;
+    }
+
+    #booking-flow-controls .level-right .button {
+        width: 100%;
+    }
+
+    #booking-flow-controls .level-left {
+        order: 3;
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        margin-top: 1rem;
+    }
+    #booking-flow-controls .level-left .button {
+        margin: 0;
+    }
 }
 </style>

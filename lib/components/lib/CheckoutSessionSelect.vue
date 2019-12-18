@@ -15,7 +15,7 @@
                 ></b-datepicker>
                 <b-loading :active="loading" :is-full-page="false" />
             </div>
-            <div class="column has-items-centered" key="time" v-show="showSessionSelect">
+            <div ref="sessionTimesList" class="column has-items-centered" key="time" v-show="showSessionSelect">
                 <div>
                     <p class="content has-text-centered subtitle is-5">
                         {{ $t('choose-time') }}:
@@ -110,6 +110,9 @@ export default {
     watch: {
         sessionTimes(sessions) {
             if(this.hasDaySelection) this.selectSession(sessions[0])
+            this.$nextTick(() => {
+                this.$refs.sessionTimesList.scrollIntoView({behavior: 'smooth'})
+            })
         },
         startTimeLocal(startTimeLocal) {
             this.getSessionsDebounced()
@@ -180,6 +183,5 @@ export default {
   opacity: 0;
   transform: translateY(20px);
 }
-
 
 </style>
