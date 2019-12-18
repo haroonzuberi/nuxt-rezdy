@@ -1,6 +1,6 @@
 <template>
   <div class="session-list">
-    <div v-for="(sessions, date) of sessionsByDate" :key="date">
+    <div v-for="(sessions, date) of sessionsByDate" :key="date" class="session-list-section">
       <slot name="title" v-bind:date="date" v-bind:sessions="sessions">
         {{ date }}
       </slot>
@@ -9,6 +9,7 @@
           v-for="(group, productCode) of groupByProductCode(sessions)"
           :key="productCode"
           class="session-group"
+          :class="itemClass"
         >
           <div class="session-product-image">
             <figure class="image is-19by9">
@@ -17,14 +18,22 @@
               </slot>
             </figure>
           </div>
-          <span class="session-product-detail">
+          <span class="session-product-heading">
             <slot name="product" v-bind:product="products[productCode]" v-bind:sessions="sessions">
               <div class="content">
                 <h4>{{ products[productCode].name }}</h4>
+              </div>
+            </slot>
+          </span>
+
+          <span class="session-product-body">
+            <slot name="body" v-bind:product="products[productCode]" v-bind:sessions="sessions">
+              <div class="content">
                 <p>{{ products[productCode].shortDescription }}</p>
               </div>
             </slot>
           </span>
+          
           <div class="session-product-footer level">
             <div class="level-left">
               <slot name="footer" v-bind:product="products[productCode]" class="level-item" />
@@ -43,9 +52,19 @@
         </div>
       </div>
     </div>
-    <b-button @click="loadMoreSessions" v-if="loadMore && sessions.length" :disabled="loading" :loading="loading">
-      {{ loadMoreLabel }}
-    </b-button>
+    <div class="sessions-load-more">
+      <b-button
+        size="is-medium"
+        type="is-primary"
+        class="is-fullwidth"
+        @click="loadMoreSessions"
+        v-if="loadMore && sessions.length"
+        :disabled="loading"
+        :loading="loading"
+      >
+        {{ loadMoreLabel }}
+      </b-button>
+    </div>
     <b-loading :active.sync="loading" />
   </div>
 </template>
@@ -86,6 +105,10 @@ export default {
     productCode: {
       type: Array,
       default: () => []
+    },
+    itemClass: {
+      type: String,
+      default: null
     }
   },
   data() {
@@ -195,21 +218,30 @@ export default {
 </script>
 
 <style scoped>
+.session-list-section:not(:first-child) {
+  margin-top: 2rem;
+}
 .session-group {
   display: grid;
-  grid-column-gap: 10px;
+  grid-column-gap: 20px;
   grid-row-gap: 20px;
   grid-template-rows: auto;
-  grid-template-columns: 1fr 3fr;
+  grid-template-columns: 150px auto;
   grid-template-areas:
-    'image session'
+    'image heading'
+    'image body'
     'image footer';
 }
 .session-product-image {
   grid-area: image;
 }
-.session-product-detail {
-  grid-area: session;
+.session-product-heading {
+  grid-area: heading;
+  display: flex;
+  align-items: center;
+}
+.session-product-body {
+  grid-area: body;
 }
 .session-product-footer {
   grid-area: footer;
@@ -217,5 +249,24 @@ export default {
 
 .session-time {
   padding: 4px;
+}
+.sessions-load-more {
+  margin-top: 2rem;
+}
+
+@media only screen and (max-width: 600px) {
+  .session-group {
+    display: grid;
+    grid-gap: 10px;
+    grid-template-rows: auto;
+    grid-template-columns: auto;
+    grid-template-areas:
+      'image heading'
+      'body body'
+      'footer footer';
+  }
+  .session-product-footer .level-item {
+    flex-wrap: wrap;
+  }
 }
 </style>
