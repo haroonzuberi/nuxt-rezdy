@@ -44,11 +44,6 @@
                     <h3 class="title is-5" style="margin-top: 2rem">
                         {{$t('contact-info')}}
                     </h3>
-                    <checkout-booking-fields
-                        :product="product"
-                        :fields.sync="bookingFields"
-                        :valid.sync="bookingFieldsValid"
-                    />
                 </b-step-item>
 
                 <!-- STEP 3: Extras -->
@@ -85,6 +80,11 @@
                             <checkout-vouchers :vouchers.sync="vouchers" />
                         </div>
                         <div class="column">
+                            <checkout-booking-fields
+                                :product="product"
+                                :fields.sync="bookingFields"
+                                :valid.sync="bookingFieldsValid"
+                            />
                             <h2 class="title is-4">{{ $t('payment-heading') }}</h2>
                             <checkout-payment :quote="quote" :total-due="totalDue" />
                         </div>
@@ -126,6 +126,9 @@
 <i18n src="./lang.json" ></i18n>
 
 <script>
+
+import { createNamespacedHelpers } from 'vuex';
+const { mapActions, mapState } = createNamespacedHelpers('rezdy/booking')
 
 import debounce from 'lodash/debounce'
 
@@ -191,7 +194,6 @@ export default {
                     icon: 'user',
                     valid: () =>
                         this.totalQuantity > 0 &&
-                        this.bookingFieldsValid &&
                         (!this.hasParticipantFields || this.participantsValid)
                 },
                 {
@@ -206,6 +208,9 @@ export default {
         }
     },
     computed: {
+        ...mapState({
+            booking: state => state
+        }),
         valid() {
             return this.steps[this.currentStep].valid()
         },
@@ -238,6 +243,12 @@ export default {
         }
     },
     watch: {
+        currentStep(step) {
+            console.log(this.steps[step].name)
+            if(this.steps[step].name === 'checkout') {
+                this.addToBooking()
+            }
+        },
         selectedSession:{
             handler(session) {
                 if(session) {
@@ -246,9 +257,12 @@ export default {
             },
             immediate: true
         },
-        quote: debounce(async function(value) {
+        quote: debounce(async function({session, quantities, extras, vouchers}) {
             this.loadingTotal = true
-            const { booking } = await this.$rezdy.getQuote(value)
+            const { booking } = await this.$rezdy.getQuote({
+                items: [{ ...session, quantities, extras }],
+                vouchers
+            })
             const { totalDue, totalAmount, items, totalPaid } = booking
             this.totalDue = totalDue
             this.totalAmount = totalAmount
@@ -267,6 +281,9 @@ export default {
         this.product = product
     },
     methods: {
+        ...mapActions([
+        'addItem'
+        ]),
         next() {
             this.stepBy(1)
         },
@@ -285,6 +302,24 @@ export default {
             this.$refs.checkout.parentNode.scroll({
                 top: 0, 
                 left: 0
+            })
+        },
+        addToBooking() {
+            const { productCode, startTimeLocal, endTimeLocal } = this.selectedSession
+            const item = {
+                productCode,
+                startTimeLocal,
+                endTimeLocal,
+                quantities: this.quantities,
+                extras: this.extras
+            }
+            this.addItem({
+                item,
+                product: this.product,
+                vouchers: this.vouchers
+            })
+            this.$nextTick(async () => {
+                const { booking } = await this.$rezdy.getQuote(this.booking)
             })
         }
     }

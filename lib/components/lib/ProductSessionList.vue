@@ -179,39 +179,7 @@ export default {
       return null
     },
     addBookingItem(session) {
-      const details = this.guests.map(g => {
-        const [label, value] = Array.isArray(g) ? g : g.split(',');
-        if (label) {
-          return Object.assign(
-            {},
-            { value },
-            session.priceOptions.find(o => o.label === label)
-          );
-        }
-
-        return Object.assign(
-          {},
-          { value },
-          session.priceOptions
-            .filter(o => o.priceGroupType === label)
-            .find(o => value <= o.maxQuantity && value >= o.minQuantity)
-        );
-      });
-      const item = {
-        productCode: session.productCode,
-        startTimeLocal: session.startTimeLocal,
-        endTimeLocal: session.endTimeLocal,
-        quantities: details.map(q => ({
-          value: q.value,
-          optionLabel: q.label,
-          optionPrice: q.price,
-          optionId: q.id
-        }))
-      };
-      this.addItem(item)
-
       this.$rezdy.checkoutSession(session, this)
-      // this.$router.push('/checkout');
     }
   }
 };
