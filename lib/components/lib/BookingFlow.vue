@@ -24,7 +24,7 @@
                 <b-step-item
                     :label="$t(steps[1].name)"
                     :icon="steps[1].icon"
-                    :clickable="this.steps[0].valid()"
+                    :clickable="this.steps[0].isValid()"
                 >
                     <checkout-pricing-select
                         v-if="selectedSession"
@@ -47,8 +47,8 @@
                 <b-step-item
                     :label="$t(steps[2].name)"
                     :icon="steps[2].icon"
-                    v-if="hasExtras"
-                    :clickable="this.steps[1].valid()"
+                    v-show="!steps[2].isDisabled()"
+                    :clickable="this.steps[1].isValid()"
                 >
                     <checkout-extras
                         :product="product"
@@ -60,7 +60,7 @@
                 <b-step-item
                     :label="$t(steps[3].name)"
                     :icon="steps[3].icon"
-                    :clickable="this.steps[2].valid()"
+                    :clickable="this.steps[2].isValid()"
                 >
                     <div class="columns">
                         <div class="column">
@@ -183,22 +183,28 @@ export default {
                 {
                     name: 'schedule',
                     icon: 'calendar',
-                    valid: () => !!this.selectedSession
+                    isDisabled: () => false,
+                    isValid: () => !!this.selectedSession
                 },
                 {
                     name: 'info',
                     icon: 'user',
-                    valid: () =>
+                    isDisabled: () => false,
+                    isValid: () =>
                         this.totalQuantity > 0 &&
                         (!this.hasParticipantFields || this.participantsValid)
                 },
                 {
-                    name: 'extras', icon: 'plus', valid: () => true
+                    name: 'extras',
+                    icon: 'plus',
+                    isDisabled: () => !this.hasExtras,
+                    isValid: () => true
                 },
                 {
                     name: 'checkout',
                     icon: 'money-bill-wave',
-                    valid: () => false
+                    isDisabled: () => false,
+                    isValid: () => false
                 }
             ]
         }
@@ -208,7 +214,7 @@ export default {
             booking: state => state.booking
         }),
         valid() {
-            return this.steps[this.currentStep].valid()
+            return this.steps[this.currentStep].isValid()
         },
         quote() {
             return {
@@ -286,7 +292,8 @@ export default {
             this.stepBy(-1)
         },
         stepBy(direction) {
-            this.currentStep = this.currentStep + direction
+            const step = (d) => this.currentStep = this.currentStep + d
+            this.steps[this.currentStep + direction].isDisabled() ? step(direction + Math.sign(direction)) : step(direction)
             if(this.currentStep === 0) {
                 this.selectedSession = null
                 this.quantities = []
