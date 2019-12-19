@@ -20,8 +20,8 @@
                     <p class="content has-text-centered subtitle is-5">
                         {{ $t('choose-time') }}:
                     </p>
-                    <ul class="columns is-multiline">
-                        <li v-for="session of sessionTimes" :key="session.id" class="column">
+                    <ul class="columns is-multiline" style="justify-content: center">
+                        <li v-for="session of sessionTimes" :key="session.id" class="column is-half has-text-centered">
                             <b-button
                                 :disabled="!session.seatsAvailable"
                                 type="is-success"
