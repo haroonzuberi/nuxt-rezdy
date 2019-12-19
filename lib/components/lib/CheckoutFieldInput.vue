@@ -14,7 +14,7 @@
     <b-input
       v-else-if="type === 'Textarea'"
       v-model="updatedValue"
-      type="textarea"
+      type="input"
       :icon="icon"
       :required="required"
     />
@@ -26,6 +26,12 @@
         dynamic-placeholder
       ></vue-tel-input>
     </div>
+    <birthdate-input
+      v-else-if="type === 'Birthdate'"
+      v-model="updatedValue"
+      :icon="icon"
+      :required="required"
+    />
     <b-select
       v-else-if="type === 'Attribution'"
       v-model="updatedValue"
@@ -118,7 +124,11 @@
 
 <script>
 import { format } from 'date-fns'
+import BirthdateInput from './BirthdateInput.vue'
 export default {
+  components: {
+    BirthdateInput
+  },
   props: {
     field: {
       type: Object,
@@ -147,6 +157,9 @@ export default {
     },
     type() {
       switch (this.field.label) {
+        case "Date of Birth":
+        case "Date of birth":
+          return "Birthdate"
         case "Special Requirements":
           return "Textarea"
         case "Preferred Language":
@@ -158,6 +171,8 @@ export default {
     },
     icon() {
       switch (this.field.label) {
+        case "Birthdate":
+          return 'calendar';
         case "Email":
           return "envelope";
         case "First Name":
@@ -169,7 +184,7 @@ export default {
       return null;
     },
     widthClass() {
-      return ["First Name", "Last Name", "Email", "Phone", "Mobile", "Date", "List"].some(
+      return ["First Name", "Last Name", "Email", "Phone", "Mobile", "Date", "List", "Birthdate"].some(
         label => this.field.label === label || this.type === label
       )
         ? "is-half"
