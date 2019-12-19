@@ -16,7 +16,7 @@
                 <b-loading :active="loading" :is-full-page="false" />
             </div>
             <div ref="sessionTimesList" class="column has-items-centered" key="time" v-show="showSessionSelect">
-                <div>
+                <div style="width:100%">
                     <p class="content has-text-centered subtitle is-5">
                         {{ $t('choose-time') }}:
                     </p>
