@@ -1,5 +1,15 @@
 <template>
     <form @submit.prevent="submitPayment" v-if="quote">
+        <b-field :label="$t('card-name')" label-position="on-border">
+            <b-input
+                v-model="ccName" 
+                icon="user"
+                size="is-medium"
+                :validation-message="$t('validation-name')"
+                expanded
+                required
+            />
+        </b-field>
         <b-field :label="$t('card-number')" label-position="on-border">
             <b-input
                 v-model="ccNo" 
@@ -62,6 +72,7 @@ export default {
     },
     data() {
         return {
+            ccName: '',
             ccNo: '4000000000000002',
             cvv: '123',
             expMonth: '11',
