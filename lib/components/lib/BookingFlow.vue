@@ -1,5 +1,5 @@
 <template>
-    <div class="section booking-flow" ref="checkout">
+    <div class="section booking-flow" ref="bookingFlow">
         <div class="container" v-if="product" >
             <checkout-overview
                 id="booking-checkout-overview"
@@ -41,9 +41,6 @@
                         :participants.sync="participants"
                         :valid.sync="participantsValid"
                     />
-                    <h3 class="title is-5" style="margin-top: 2rem">
-                        {{$t('contact-info')}}
-                    </h3>
                 </b-step-item>
 
                 <!-- STEP 3: Extras -->
@@ -86,7 +83,6 @@
                                 :valid.sync="bookingFieldsValid"
                             />
                             <h2 class="title is-4">{{ $t('payment-heading') }}</h2>
-                            <checkout-payment :quote="quote" :total-due="totalDue" />
                         </div>
                     </div>
                 </b-step-item>
@@ -209,7 +205,7 @@ export default {
     },
     computed: {
         ...mapState({
-            booking: state => state
+            booking: state => state.booking
         }),
         valid() {
             return this.steps[this.currentStep].valid()
@@ -244,7 +240,6 @@ export default {
     },
     watch: {
         currentStep(step) {
-            console.log(this.steps[step].name)
             if(this.steps[step].name === 'checkout') {
                 this.addToBooking()
             }
@@ -299,7 +294,7 @@ export default {
             }
         },
         handleStepChange(step) {
-            this.$refs.checkout.parentNode.scroll({
+            this.$refs.bookingFlow.parentNode.scroll({
                 top: 0, 
                 left: 0
             })
@@ -319,7 +314,8 @@ export default {
                 vouchers: this.vouchers
             })
             this.$nextTick(async () => {
-                const { booking } = await this.$rezdy.getQuote(this.booking)
+                this.$parent.close()
+                this.$rezdy.checkout(this)
             })
         }
     }

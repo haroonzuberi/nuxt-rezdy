@@ -5,7 +5,7 @@
         </b-button>
         <form v-if="show" @submit.prevent="handleVoucher">
             <b-field :message="error ? error.errorMessage : null" :type="error ? 'is-danger' : null">
-                <b-input :placeholder="$t('voucher-placeholder')" expanded v-model="voucherCode" @focus="clearError" />
+                <b-input :placeholder="$t('voucher-placeholder')" expanded v-model="voucherCode" @focus="clearError" @blur="show = false" />
                 <b-button type="is-primary" native-type="submit" :loading="loading" :disabled="!voucherCode">
                     {{ $t('apply') }}
                 </b-button>
@@ -30,14 +30,10 @@
 <i18n src="./lang.json"></i18n>
 
 <script>
+import { createNamespacedHelpers } from 'vuex'
+const { mapActions, mapState } = createNamespacedHelpers('rezdy/booking')
 export default {
     name: 'CheckoutVouchers',
-    props: {
-        vouchers: {
-            type: Array,
-            default: () => []
-        }
-    },
     data() {
         return {
             voucherCode: '',
@@ -46,22 +42,26 @@ export default {
             show: false
         }
     },
+    computed: {
+        ...mapState({
+            vouchers: state => state.booking.vouchers
+        })
+    },
     methods: {
+        ...mapActions(['addVoucher', 'removeVoucher']),
         clearError() {
             this.voucherCode = ''
             this.error = null
-        },
-        removeVoucher(voucher) {
-            this.$emit('update:vouchers', this.vouchers.filter(v => v !== voucher.toUpperCase()))
         },
         async handleVoucher(event) {
             this.loading = true
             const { voucher, requestStatus } = await this.$rezdy.getVoucher(this.voucherCode)
             this.loading = false
             if (voucher) {
-                this.$emit('update:vouchers', [...this.vouchers.filter(v => v !== this.voucherCode.toUpperCase()), this.voucherCode.toUpperCase()])
+                this.addVoucher(this.voucherCode)
                 this.error = null
                 this.voucherCode = ''
+                this.show = false
                 return
             }
             this.error = requestStatus.error

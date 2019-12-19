@@ -1,5 +1,5 @@
 <template>
-    <form @submit.prevent="submitPayment" v-if="quote">
+    <form @submit.prevent="submitPayment">
         <b-field :label="$t('card-name')" label-position="on-border">
             <b-input
                 v-model="ccName" 
@@ -60,16 +60,6 @@
 <script>
 export default {
     name: 'CheckoutPayment',
-    props: {
-        quote: {
-            type: Object,
-            default: () => null
-        },
-        totalDue: {
-            type: Number,
-            default: 0
-        }
-    },
     data() {
         return {
             ccName: '',
@@ -112,7 +102,6 @@ export default {
         async submitPayment() {
             const { ccNo, cvv, expMonth, expYear } = this;
             const data = {
-                ...this.quote,
                 payments: {
                     type: 'CREDITCARD',
                     amount: this.totalDue,
@@ -120,6 +109,7 @@ export default {
                     label: 'Payment processed by 2Checkout' // TODO: this would be best done on server!
                 },
                 creditCard: {
+                    ccName,
                     ccNo,
                     cvv,
                     expMonth,
@@ -129,7 +119,7 @@ export default {
 
             this.processing = true
 
-            const {error, checkout, booking } = await this.$rezdy.checkout(data)
+            const {error, checkout, booking } = await this.$rezdy.pay(data)
 
             if(error) {
                 this.$buefy.toast.open({
