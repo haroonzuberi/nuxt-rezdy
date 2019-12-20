@@ -39,7 +39,7 @@
             <b-field label="CVV" label-position="inside" style="flex-shrink: 1">
                 <b-input
                     v-model="cvv"
-                    icon="lock-alt"
+                    icon="lock"
                     :maxlength="4"
                     :has-counter="false"
                     required
@@ -47,7 +47,7 @@
             </b-field>
         </b-field>
         <div class="payment-options">
-            <b-button type="is-success" native-type="submit" icon="lock-alt">
+            <b-button type="is-success" native-type="submit" icon="lock">
                 {{$t('pay')}}
             </b-button>
         </div>
