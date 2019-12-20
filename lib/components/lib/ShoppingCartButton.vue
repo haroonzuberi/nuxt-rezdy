@@ -1,10 +1,8 @@
 <template>
     <div class="shopping-cart-button" @click="openCheckout">
-        <fa-layers class="fa-fw fa-2x">
-            <fa-icon :icon="['fas', 'shopping-cart']" />
-            <fa-layers class="fa-lg fa-layers-counter fa-layers-top-right" style="line-height: inherit">
-                {{ count }}
-            </fa-layers>
+        <fa-layers full-width class="fa-lg">
+            <fa-icon icon="shopping-cart" />
+            <fa-layers-text counter :value="count" position="top-right" v-if="count > 0"/>
         </fa-layers>
     </div>
 </template>
@@ -27,3 +25,16 @@ export default {
 }
 
 </script>
+
+<style scoped>
+.shopping-cart-button {
+    cursor: pointer
+}
+.fa-shopping-cart {
+    margin-right: 0 !important;
+}
+.fa-layers-counter {
+    transform-origin: 163% -45%;
+    transform: scale(0.6);
+}
+</style>
