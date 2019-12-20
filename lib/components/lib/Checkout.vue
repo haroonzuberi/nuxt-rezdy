@@ -1,11 +1,16 @@
 <template>
     <section class="section" v-if="quote && quote.items && quote.items.length">
-        <checkout-order-summary  />
-        <checkout-vouchers />
-        <checkout-payment  />
+        <div>
+            <checkout-order-summary  />
+            <checkout-vouchers />
+            <checkout-payment  />
+        </div>
     </section>
     <section class="section" v-else-if="!loading">
-        <p>Your cart is empty.</p>
+        <div class="content has-text-centered">
+            <h1>{{$t('empty-cart')}}</h1>
+            <b-button type="is-primary" size="is-medium" @click="$parent.close()">{{ $t('done') }}</b-button>
+        </div>
     </section>
     <section class="section" v-else>
         <b-loading :is-full-page="false" active />
@@ -41,3 +46,12 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.section {
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+</style>
