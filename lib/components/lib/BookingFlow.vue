@@ -47,7 +47,7 @@
                 <b-step-item
                     :label="$t(steps[2].name)"
                     :icon="steps[2].icon"
-                    v-show="!steps[2].isDisabled()"
+                    v-if="!steps[2].isDisabled()"
                     :clickable="this.steps[1].isValid()"
                 >
                     <checkout-extras
