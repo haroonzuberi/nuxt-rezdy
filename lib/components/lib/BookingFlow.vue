@@ -5,10 +5,6 @@
                 id="booking-checkout-overview"
                 :product="product"
                 :session="selectedSession"
-                :quantities="quantities"
-                :participants-fields="participants"
-                :booking-fields="bookingFields"
-                :extras="extras"
             />
             <b-steps :has-navigation="false" v-model="currentStep" @change="handleStepChange">
 
@@ -56,10 +52,20 @@
                     />
                 </b-step-item>
 
-                <!-- STEP 4: Payment -->
+                <!-- STEP 4: Pickup Locations -->
                 <b-step-item
                     :label="$t(steps[3].name)"
                     :icon="steps[3].icon"
+                    v-if="!steps[3].isDisabled()"
+                    :clickable="this.steps[1].isValid()"
+                >
+                    <checkout-pickup-locations :locations="pickupLocations" :selected.sync="selectedPickupLocation" />
+                </b-step-item>
+
+                <!-- STEP 5: Payment -->
+                <b-step-item
+                    :label="$t(steps[4].name)"
+                    :icon="steps[4].icon"
                     :clickable="false"
                 ></b-step-item>
             </b-steps>
@@ -106,26 +112,20 @@ import debounce from 'lodash/debounce'
 
 import CheckoutSessionSelect from './CheckoutSessionSelect.vue'
 import CheckoutPricingSelect from './CheckoutPricingSelect.vue'
-import CheckoutBookingFields from './CheckoutBookingFields.vue'
 import CheckoutParticipants from './CheckoutParticipants.vue'
 import CheckoutExtras from './CheckoutExtras.vue'
 import CheckoutOverview from './CheckoutOverview.vue'
-import CheckoutVouchers from './CheckoutVouchers.vue'
-import CheckoutOrderSummary from './CheckoutOrderSummary.vue'
-import CheckoutPayment from './CheckoutPayment.vue'
+import CheckoutPickupLocations from './CheckoutPickupLocations.vue'
 
 export default {
     name: 'ProductBookingFlow',
     components: {
         CheckoutSessionSelect,
         CheckoutPricingSelect,
-        CheckoutBookingFields,
         CheckoutParticipants,
         CheckoutExtras,
         CheckoutOverview,
-        CheckoutVouchers,
-        CheckoutOrderSummary,
-        CheckoutPayment
+        CheckoutPickupLocations
     },
     props: {
         productCode: {
@@ -142,19 +142,16 @@ export default {
             currentStep: 0,
             loadingTotal: false,
             selectedSession: null,
+            selectedPickupLocation: null,
             product: null,
             quantities: [],
             participants: [],
             participantsValid: false,
             bookingFields: [],
             bookingFieldsValid: false,
+            pickupLocations: null,
             totalDue: 0,
-            totalAmount: 0,
-            totalPaid: 0,
-            taxesAndFees: 0,
-            extrasTotal: 0,
             extras: [],
-            vouchers: [],
             steps: [
                 {
                     name: 'schedule',
@@ -175,6 +172,12 @@ export default {
                     icon: 'plus',
                     isDisabled: () => !this.hasExtras,
                     isValid: () => true
+                },
+                {
+                    name: 'pickup',
+                    icon: 'map-marked',
+                    isDisabled: () => !this.hasPickupLocations,
+                    isValid: () => this.selectedPickupLocation
                 },
                 {
                     name: 'checkout',
@@ -218,6 +221,9 @@ export default {
         },
         hasExtras() {
             return this.product && this.product.extras && this.product.extras.length
+        },
+        hasPickupLocations() {
+            return this.product.pickupId
         }
     },
     watch: {
@@ -235,11 +241,8 @@ export default {
                 items: [{ ...session, quantities, extras }],
                 vouchers
             })
-            const { totalDue, totalAmount, items, totalPaid } = booking
+            const { totalDue } = booking
             this.totalDue = totalDue
-            this.totalAmount = totalAmount
-            this.totalPaid = totalPaid
-            this.taxesAndFees = (items || []).reduce((total, item) => total + (item.totalItemTax || 0), 0)
             this.loadingTotal = false
         }, 200) 
     },
@@ -249,8 +252,10 @@ export default {
         }
 
         const { product } = await this.$parent.$rezdy.getProductByCode(this.productCode)
+        const { pickupLocations } = await this.$parent.$rezdy.getProductPickupLocations(this.productCode)
         
         this.product = product
+        this.pickupLocations = pickupLocations
     },
     methods: {
         ...mapActions([
@@ -289,7 +294,8 @@ export default {
                 startTimeLocal,
                 endTimeLocal,
                 quantities: this.quantities,
-                extras: this.extras
+                extras: this.extras,
+                pickupLocation: this.selectedPickupLocation
             }
             this.addItem({
                 item,
