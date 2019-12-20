@@ -6,7 +6,11 @@
                 :product="product"
                 :session="selectedSession"
             />
-            <b-steps :has-navigation="false" v-model="currentStep" @change="handleStepChange">
+            <b-steps
+                :has-navigation="false"
+                v-model="currentStep"
+                @change="handleStepChange"
+            >
 
                 <!-- STEP 1: Session Select -->
                 <b-step-item :label="$t(steps[0].name)" :icon="steps[0].icon">
@@ -57,7 +61,7 @@
                     :label="$t(steps[3].name)"
                     :icon="steps[3].icon"
                     v-if="!steps[3].isDisabled()"
-                    :clickable="this.steps[1].isValid()"
+                    :clickable="this.steps[2].isValid() && this.steps[1].isValid()"
                 >
                     <checkout-pickup-locations :locations="pickupLocations" :selected.sync="selectedPickupLocation" />
                 </b-step-item>
@@ -66,7 +70,7 @@
                 <b-step-item
                     :label="$t(steps[4].name)"
                     :icon="steps[4].icon"
-                    :clickable="false"
+                    :clickable="this.steps[3].isValid() && this.steps[2].isValid() && this.steps[1].isValid()"
                 ></b-step-item>
             </b-steps>
             <div id="booking-flow-controls" class="level">
@@ -192,8 +196,11 @@ export default {
         ...mapState({
             booking: state => state.booking
         }),
+        activeSteps() {
+            return this.steps.filter(step => !step.isDisabled())
+        },
         valid() {
-            return this.steps[this.currentStep].isValid()
+            return this.activeSteps[this.currentStep].isValid()
         },
         quote() {
             return {
@@ -262,8 +269,7 @@ export default {
         'addItem'
         ]),
         next() {
-            const totalActiveSteps = this.steps.filter(step => !step.isDisabled()).length
-            if(this.currentStep === totalActiveSteps - 2) {
+            if(this.isLastStep(this.currentStep - 1)) {
                 this.addToBooking()
                 return
             }
@@ -273,15 +279,21 @@ export default {
             this.stepBy(-1)
         },
         stepBy(direction) {
-            const step = (d) => this.currentStep = this.currentStep + d
-            this.steps[this.currentStep + direction].isDisabled() ? step(direction + Math.sign(direction)) : step(direction)
+            this.currentStep = this.currentStep + direction
             if(this.currentStep === 0) {
                 this.selectedSession = null
                 this.quantities = []
                 this.extras = []
             }
         },
+        isLastStep(step) {
+            return (step || this.currentStep) === this.activeSteps.length - 1
+        },
         handleStepChange(step) {
+            if(this.isLastStep()) {
+                this.addToBooking()
+                return
+            }
             this.$refs.bookingFlow.parentNode.scroll({
                 top: 0, 
                 left: 0
