@@ -60,32 +60,8 @@
                 <b-step-item
                     :label="$t(steps[3].name)"
                     :icon="steps[3].icon"
-                    :clickable="this.steps[2].isValid()"
-                >
-                    <div class="columns">
-                        <div class="column">
-                            <h2 class="title is-4">{{$t('summary')}}</h2>
-                            <checkout-order-summary
-                                :quantities="quantities"
-                                :extras="extras"
-                                :total-amount="totalAmount"
-                                :taxes-and-fees="taxesAndFees"
-                                :total-paid="totalPaid"
-                                :total-due="totalDue"
-                                :currency="product.currency"
-                            />
-                            <checkout-vouchers :vouchers.sync="vouchers" />
-                        </div>
-                        <div class="column">
-                            <checkout-booking-fields
-                                :product="product"
-                                :fields.sync="bookingFields"
-                                :valid.sync="bookingFieldsValid"
-                            />
-                            <h2 class="title is-4">{{ $t('payment-heading') }}</h2>
-                        </div>
-                    </div>
-                </b-step-item>
+                    :clickable="false"
+                ></b-step-item>
             </b-steps>
             <div id="booking-flow-controls" class="level">
                 <div class="level-left">
@@ -245,11 +221,6 @@ export default {
         }
     },
     watch: {
-        currentStep(step) {
-            if(this.steps[step].name === 'checkout') {
-                this.addToBooking()
-            }
-        },
         selectedSession:{
             handler(session) {
                 if(session) {
@@ -286,6 +257,11 @@ export default {
         'addItem'
         ]),
         next() {
+            const totalActiveSteps = this.steps.filter(step => !step.isDisabled()).length
+            if(this.currentStep === totalActiveSteps - 2) {
+                this.addToBooking()
+                return
+            }
             this.stepBy(1)
         },
         prev() {
