@@ -1,6 +1,8 @@
 <template>
     <div class="rezdy-checkout-payment">
+        <h2 class="title is-4">{{ $t('billing-contact') }}</h2>
         <checkout-booking-fields :fields.sync="fields" :valid.sync="hasValidBookingFields" hide-optional />
+        <h2 class="title is-4">{{ $t('payment') }}</h2>
         <div class="message">
             <div class="message-body">
                 <component :is="paymentComponent" :booking-fields="bookingFields" :can-pay="hasValidBookingFields" />
@@ -8,6 +10,8 @@
         </div>
     </div>
 </template>
+
+<i18n src="./lang.json"></i18n>
 
 <script>
 import CheckoutBookingFields from './CheckoutBookingFields.vue'

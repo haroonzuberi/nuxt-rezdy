@@ -41,6 +41,11 @@
                 <th>{{ $t('summary-vouchers') }}</th>
                 <td colspan="2" style="white-space: nowrap">- {{ quote.totalPaid | currency($i18n.locale, currency) }}</td>
             </tr>
+            <tr>
+                <td colspan="3" style="padding:0">
+                    <checkout-vouchers />
+                </td>
+            </tr>
             <tr class="total-due">
                 <th>{{ $t('summary-total-due') }}</th>
                 <td colspan="2">{{ quote.totalDue | currency($i18n.locale, currency) }}</td>
@@ -55,8 +60,12 @@
 <script>
 import { createNamespacedHelpers } from 'vuex'
 const { mapActions, mapState } = createNamespacedHelpers('rezdy/booking')
+import CheckoutVouchers from './CheckoutVouchers.vue'
 export default {
     name: 'CheckoutOrderSummary',
+    components: {
+        CheckoutVouchers
+    },
     props: {
         currency: {
             type: String,
@@ -84,7 +93,7 @@ export default {
 
 <style scoped>
 
-.rezdy-order-item-amount, td:last-child {
+.rezdy-order-item-amount, td:last-child:not(:first-child) {
     text-align: right;
 }
 

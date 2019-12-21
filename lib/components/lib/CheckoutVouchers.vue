@@ -1,17 +1,5 @@
 <template>
     <div>
-        <b-button v-if="!show" type="is-primary" expanded @click="show = true">
-            {{ $t('add-voucher') }}
-        </b-button>
-        <form v-if="show" @submit.prevent="handleVoucher">
-            <b-field :message="error ? error.errorMessage : null" :type="error ? 'is-danger' : null">
-                <b-input :placeholder="$t('voucher-placeholder')" expanded v-model="voucherCode" @focus="clearError" @blur="show = false" />
-                <b-button type="is-primary" native-type="submit" :loading="loading" :disabled="!voucherCode">
-                    {{ $t('apply') }}
-                </b-button>
-            </b-field>
-        </form>
-
         <table class="table is-striped is-fullwidth">
             <tr v-for="voucher of vouchers" :key="voucher">
                 <td>
@@ -24,6 +12,17 @@
                 </td>
             </tr>
         </table>
+        <b-button v-if="!show" type="is-primary is-outlined" expanded @click="showVoucherInput">
+            {{ $t('add-voucher') }}
+        </b-button>
+        <form v-if="show" @submit.prevent="handleVoucher">
+            <b-field :message="error ? error.errorMessage : null" :type="error ? 'is-danger' : null">
+                <b-input ref="voucherInput" :placeholder="$t('voucher-placeholder')" expanded v-model="voucherCode" @blur="handleBlur" />
+                <b-button type="is-primary" native-type="submit" :loading="loading" :disabled="!voucherCode">
+                    {{ $t('apply') }}
+                </b-button>
+            </b-field>
+        </form>
     </div>
 </template>
 
@@ -52,6 +51,17 @@ export default {
         clearError() {
             this.voucherCode = ''
             this.error = null
+        },
+        handleBlur() {
+            if(this.voucherCode.length === 0) {
+                this.show = false
+            }
+        },
+        showVoucherInput() {
+            this.show = true
+            this.$nextTick(() => {
+                this.$refs.voucherInput.focus()
+            })
         },
         async handleVoucher(event) {
             this.loading = true

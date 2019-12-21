@@ -1,8 +1,8 @@
 <template>
     <section class="section" v-if="quote && quote.items && quote.items.length">
         <div style="width:100%">
-            <checkout-order-summary  />
-            <checkout-vouchers />
+            <h1 class="title">{{ $t('shopping-cart') }}</h1>
+            <checkout-order-summary :currency="quote.totalCurrency"  />
             <checkout-payment :processor="$rezdy.cardProcessor" />
         </div>
     </section>
@@ -23,13 +23,11 @@
 import { createNamespacedHelpers } from 'vuex'
 const { mapState } = createNamespacedHelpers('rezdy/booking')
 import CheckoutOrderSummary from './CheckoutOrderSummary.vue'
-import CheckoutVouchers from './CheckoutVouchers.vue'
 import CheckoutPayment from './CheckoutPayment.vue'
 export default {
     name: 'CheckoutCart',
     components: {
         CheckoutPayment,
-        CheckoutVouchers,
         CheckoutOrderSummary
     },
     data() {
