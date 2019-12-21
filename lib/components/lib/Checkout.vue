@@ -1,9 +1,9 @@
 <template>
     <section class="section" v-if="quote && quote.items && quote.items.length">
-        <div>
+        <div style="width:100%">
             <checkout-order-summary  />
             <checkout-vouchers />
-            <checkout-payment  />
+            <checkout-payment :processor="$rezdy.cardProcessor" />
         </div>
     </section>
     <section class="section" v-else-if="!loading">

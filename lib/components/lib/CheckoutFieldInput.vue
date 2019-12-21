@@ -104,6 +104,7 @@
     <b-switch
       v-else-if="type === 'Boolean'"
       v-model="updatedValue"
+      :required="required"
       :true-value="1"
       :false-value="0"
 
@@ -111,6 +112,7 @@
     <b-datepicker
       v-else-if="type === 'Date'"
       v-model="updatedValue"
+      :required="required"
       :month-names="monthNames"
       icon="calendar"
       :max-date="maxDate"
@@ -184,7 +186,19 @@ export default {
       return null;
     },
     widthClass() {
-      return ["First Name", "Last Name", "Email", "Phone", "Mobile", "Date", "List", "Birthdate"].some(
+      return [
+        "First Name",
+        "Last Name",
+        "Email",
+        "Phone",
+        "Mobile",
+        "Date",
+        "List",
+        "Birthdate",
+        "City",
+        "State/County/Region",
+        "Postcode/ZIP"
+      ].some(
         label => this.field.label === label || this.type === label
       )
         ? "is-half"

@@ -1,5 +1,5 @@
 <template>
-    <form ref="form" @submit.prevent v-if="product">
+    <form ref="form" @submit.prevent v-if="bookingFields && bookingFields.length">
         <div class="columns is-multiline">
             <checkout-field-input
                 class="column"
@@ -30,17 +30,18 @@
 <i18n src="./lang.json"></i18n>
 
 <script>
+import { uniqBy } from 'lodash'
+import { createNamespacedHelpers } from 'vuex';
+const { mapState } = createNamespacedHelpers('rezdy/booking')
+
 import CheckoutFieldInput from './CheckoutFieldInput.vue'
+
 export default {
     name: 'CheckoutBookingFields',
     components: {
         CheckoutFieldInput
     },
     props: {
-        product: {
-            type: Object,
-            default: () => null
-        },
         hideOptional: {
             type: Boolean,
             default: false
@@ -53,10 +54,26 @@ export default {
     data() {
         return {
             expanded: false,
-            test: 'test'
+            products: []
         }
     },
+    watch: {
+        items: {
+            async handler(items) {
+                console.log(items)
+                const { products } = await this.$rezdy.getProducts({
+                    productCode: items.map(i => i.productCode)
+                })
+                this.products = Object.values(products)
+            },
+            immediate: true
+        }
+            
+    },
     computed: {
+        ...mapState({
+            items: state => state.booking.items
+        }),
         requiredFields() {
             return this.bookingFields.filter(field => field.requiredPerBooking)
         },
@@ -64,8 +81,13 @@ export default {
             return this.bookingFields.filter(field => !field.requiredPerBooking)
         },
         bookingFields() {
-            if(!this.product) return []
-            return this.product.bookingFields
+            if(!this.items || !this.products) return []
+
+            const bookingFields = this.products.reduce((fields, product) => {
+                return [...fields, ...product.bookingFields]
+            }, [])
+
+            return uniqBy(bookingFields, 'label')
                 .filter(field => field.visiblePerBooking)
                 .sort((a, b) => {
                     // Put standard fields first
