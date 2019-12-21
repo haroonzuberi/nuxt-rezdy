@@ -5,7 +5,11 @@
         <h2 class="title is-4">{{ $t('payment') }}</h2>
         <div class="message">
             <div class="message-body">
-                <component :is="paymentComponent" :booking-fields="bookingFields" :can-pay="hasValidBookingFields" />
+                <component
+                    :is="paymentComponent"
+                    :booking-fields="bookingFields"
+                    :can-pay="hasValidBookingFields"
+                />
             </div>
         </div>
     </div>

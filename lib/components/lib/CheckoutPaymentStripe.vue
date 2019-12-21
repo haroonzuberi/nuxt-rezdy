@@ -1,17 +1,25 @@
 <template>
     <form @submit.prevent="handleSubmit" id="payment-form">
-
-        <b-field label="Credit or debit card" label-for="card-element">
+        <div class="is-pulled-right has-text-grey">
+            <fa-icon
+                class="accepted-card"
+                v-for="card of acceptedCards"
+                :key="card"
+                :icon="['fab', 'cc-' + card]"
+                size="lg"
+            />
+        </div>
+        <b-field :label="$t('credit-debit')" label-for="card-element">
             <div class="control">
                 <div id="card-element" class="input" :class="cardClass">
-                    Loading...
+                    {{ $t('loading') }}...
                 </div>
             </div>
         </b-field>
         <div class="level">
             <div class="level-left">
                 <div class="level-item">
-                    Pay securely with  &nbsp;
+                    {{ $t('pay-securely-with')}}  &nbsp;
                     <a href="https://stripe.com/" target="_blank">
                         <fa-icon :icon="['fab', 'stripe']" size="4x" title="Stripe Payments" />
                     </a>
@@ -58,7 +66,8 @@ export default {
             card: null,
             cardClass: '',
             valid: false,
-            processing: false
+            processing: false,
+            acceptedCards:  ['visa', 'amex', 'discover', 'jcb', 'mastercard', 'diners-club']
         }
     },
     computed: {
@@ -132,5 +141,8 @@ export default {
 <style scoped>
 #card-element {
     display: block;
+}
+.accepted-card {
+    margin: 0 0.25em;
 }
 </style>
