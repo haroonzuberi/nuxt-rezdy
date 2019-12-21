@@ -69,18 +69,12 @@ export default {
     mounted() {
         if(window.Stripe) {
             this.buildForm()
-        }
-    },
-    head() {
-        return {
-            script: [
-                {
-                    hid: 'stripeElements',
-                    src: 'https://js.stripe.com/v3/',
-                    type: 'text/javascript',
-                    callback: () => this.buildForm()
-                }
-            ]
+        } else {
+            const script = document.createElement("script");
+            script.onload = this.buildForm;
+            script.type = "text/javascript";
+            script.src = "https://js.stripe.com/v3/";
+            document.head.appendChild(script);
         }
     },
     methods: {
