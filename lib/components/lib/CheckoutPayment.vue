@@ -1,7 +1,11 @@
 <template>
     <div class="rezdy-checkout-payment">
         <checkout-booking-fields :fields.sync="fields" :valid.sync="hasValidBookingFields" hide-optional />
-        <component :is="paymentComponent" :booking-fields="bookingFields" :can-pay="hasValidBookingFields" />
+        <div class="message">
+            <div class="message-body">
+                <component :is="paymentComponent" :booking-fields="bookingFields" :can-pay="hasValidBookingFields" />
+            </div>
+        </div>
     </div>
 </template>
 

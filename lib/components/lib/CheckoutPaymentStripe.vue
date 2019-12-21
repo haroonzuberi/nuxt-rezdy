@@ -1,19 +1,34 @@
 <template>
     <form @submit.prevent="handleSubmit" id="payment-form">
-        <label class="label" for="card-element">
-            Credit or debit card
-        </label>
-        <div id="card-element" class="input" :class="cardClass">
-            Loading...
+
+        <b-field label="Credit or debit card" label-for="card-element">
+            <div class="control">
+                <div id="card-element" class="input" :class="cardClass">
+                    Loading...
+                </div>
+            </div>
+        </b-field>
+        <div class="level">
+            <div class="level-left">
+                <div class="level-item">
+                    Pay securely with  &nbsp;
+                    <a href="https://stripe.com/" target="_blank">
+                        <fa-icon :icon="['fab', 'stripe']" size="4x" title="Stripe Payments" />
+                    </a>
+                </div>
+            </div>
+            <div class="level-right">
+                <b-button
+                    class="level-item"
+                    native-type="submit"
+                    type="is-success"
+                    size="is-medium"
+                    :disabled="!canPay || !valid"
+                    icon-left="lock">
+                    {{ $t('pay') }}
+                </b-button>
+            </div>
         </div>
-        <b-button
-            native-type="submit"
-            type="is-success"
-            size="is-large"
-            :disabled="!canPay || !valid"
-            icon-left="lock">
-            {{ $t('pay') }}
-        </b-button>
         <b-loading :active="processing" :is-full-page="false" />
     </form>
 </template>
@@ -93,6 +108,7 @@ export default {
             })
         },
         async handleSubmit() {
+            if(!this.canPay || !this.valid) return
             this.processing = true
             const { token, error } = await this.stripe.createToken(this.card);
 
