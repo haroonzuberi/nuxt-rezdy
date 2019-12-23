@@ -136,7 +136,10 @@ export default {
 
             if (order.error) {
                 this.handleError({message: order.error.split(';')[0]})
+                return
             }
+
+            this.$ecommerce.trackPurchase({ booking: order });
         }
     }
 }

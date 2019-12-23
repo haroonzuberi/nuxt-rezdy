@@ -234,6 +234,15 @@ export default {
         }
     },
     watch: {
+        currentStep: {
+            handler(step) {
+                this.$ecommerce.trackCheckoutStep({
+                    step: this.currentStep + 1,
+                    option: this.steps[this.currentStep].name
+                })
+            },
+            immediate: true
+        },
         selectedSession:{
             handler(session) {
                 if(session) {
@@ -263,6 +272,7 @@ export default {
         
         this.product = product
         this.pickupLocations = pickupLocations
+        this.$ecommerce.trackCheckoutAdd({ product })
     },
     methods: {
         ...mapActions([

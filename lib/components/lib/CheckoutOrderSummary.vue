@@ -85,6 +85,7 @@ export default {
     methods: {
         ...mapActions(['removeItem']),
         removeCheckoutItem(item) {
+            this.$ecommerce.trackCheckoutRemove({ item })
             this.removeItem({ item })
         }
     }
