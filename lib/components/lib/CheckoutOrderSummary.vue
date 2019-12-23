@@ -1,14 +1,14 @@
 <template>
-    <div>
+    <div v-if="booking">
         <table class="order-summary-table table is-small is-fullwidth">
-            <template v-for="item of quote.items">
+            <template v-for="item of booking.items">
                 <tr class="rezdy-order-item" :key="'item-' +item.productCode + item.startTimeLocal">
                     <th>
                         <h3 class="title is-5 has-text-left is-marginless">{{ item.productName }}</h3>
                         <p>{{ item.startTimeLocal }}</p>
                     </th>
-                    <td class="rezdy-order-item-amount">{{ item.subtotal | currency($i18n.locale, currency) }}</td>
-                    <td class="rezdy-order-item-remove"><button class="delete" @click="removeCheckoutItem(item)">Remove</button></td>
+                    <td class="rezdy-order-item-amount" :colspan="isConfirmation ? 2 : null">{{ item.subtotal | currency($i18n.locale, currency) }}</td>
+                    <td class="rezdy-order-item-remove" v-if="!isConfirmation"><button class="delete" @click="removeCheckoutItem(item)">Remove</button></td>
                 </tr>
                 <tr class="rezdy-order-item-details" :key="'details-' +item.productCode + item.startTimeLocal">
                     <td colspan="3">
@@ -27,31 +27,30 @@
             </template>
             <tr v-if="taxesAndFees">
                 <th>{{ $t('summary-pre-tax') }}</th>
-                <td>{{ (quote.totalAmount - taxesAndFees) | currency($i18n.locale, currency) }}</td>
+                <td>{{ (booking.totalAmount - taxesAndFees) | currency($i18n.locale, currency) }}</td>
             </tr>
             <tr v-if="taxesAndFees">
                 <th>{{ $t('summary-taxes') }}</th>
                 <td>{{ taxesAndFees | currency($i18n.locale, currency) }}</td>
             </tr>
-            <tr v-if="quote.totalAmount !== quote.totalDue">
+            <tr v-if="booking.totalAmount !== booking.totalDue">
                 <th>{{ $t('summary-order-total') }}</th>
-                <td colspan="2">{{ quote.totalAmount | currency($i18n.locale, currency) }}</td>
+                <td colspan="2">{{ booking.totalAmount | currency($i18n.locale, currency) }}</td>
             </tr>
-            <tr v-if="quote.totalPaid">
+            <tr v-if="voucherTotal">
                 <th>{{ $t('summary-vouchers') }}</th>
-                <td colspan="2" style="white-space: nowrap">- {{ quote.totalPaid | currency($i18n.locale, currency) }}</td>
+                <td colspan="2" style="white-space: nowrap">- {{ voucherTotal | currency($i18n.locale, currency) }}</td>
             </tr>
-            <tr>
+            <tr v-if="!isConfirmation">
                 <td colspan="3" style="padding:0; border: none;">
                     <checkout-vouchers />
                 </td>
             </tr>
             <tr class="total-due">
-                <th>{{ $t('summary-total-due') }}</th>
-                <td colspan="2">{{ quote.totalDue | currency($i18n.locale, currency) }}</td>
+                <th>{{ isConfirmation ? $t('summary-total') : $t('summary-total-due') }}</th>
+                <td colspan="2">{{ total | currency($i18n.locale, currency) }}</td>
             </tr>
         </table>
-        <b-loading :is-full-page="false" :active="loading" />
     </div>
 </template>
 
@@ -67,20 +66,43 @@ export default {
         CheckoutVouchers
     },
     props: {
-        currency: {
-            type: String,
-            default: 'EUR'
+        isConfirmation: {
+            type: Boolean,
+            default: false
+        },
+        booking: {
+            type: Object,
+            default: () => null
         }
     },
     computed: {
+        currency() {
+            return this.booking.totalCurrency || 'EUR'
+        },
         ...mapState({
-            quote: state => state.quote,
             loading: state => state.loading.quote || false
         }),
         taxesAndFees() {
-            if(!this.quote) return
-            return (this.quote.items || []).reduce((total, item) => total + (item.totalItemTax || 0), 0)
+            if(!this.booking) return
+            return (this.booking.items || []).reduce((total, item) => total + (item.totalItemTax || 0), 0)
+        },
+        voucherTotal() {
+            if(this.isConfirmation) {
+                return this.booking.payments
+                    .filter(p => p.type !== 'CREDITCARD')
+                    .reduce((total, payment) => total + payment.amount, 0)
+            }
+            return this.booking.totalPaid
+        },
+        total() {
+            if(this.isConfirmation) {
+                return this.booking.payments
+                    .filter(p => p.type === 'CREDITCARD')
+                    .reduce((total, payment) => total + payment.amount, 0)
+            }
+            return this.booking.totalDue
         }
+
     },
     methods: {
         ...mapActions(['removeItem']),

@@ -2,8 +2,9 @@
     <section class="section" v-if="quote && quote.items && quote.items.length">
         <div style="width:100%">
             <h1 class="title">{{ $t('shopping-cart') }}</h1>
-            <checkout-order-summary :currency="quote.totalCurrency"  />
+            <checkout-order-summary :booking="quote"  />
             <checkout-payment :processor="$rezdy.cardProcessor" />
+            <b-loading :is-full-page="false" :active="loading" />
         </div>
     </section>
     <section class="section" v-else-if="!loading">

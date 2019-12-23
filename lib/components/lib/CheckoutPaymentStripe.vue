@@ -70,9 +70,15 @@ export default {
             acceptedCards:  ['visa', 'amex', 'discover', 'jcb', 'mastercard', 'diners-club']
         }
     },
+    watch: {
+        processing(status) {
+            this.$emit('processing', status)
+        }
+    },
     computed: {
         ...mapState({
             booking: state => state.booking,
+            quote: state => state.quote,
             totalDue(state) {
                 const { totalDue, totalCurrency } = state.quote
                 return this.$options.filters.currency(totalDue, this.$i18n.locale, totalCurrency)
@@ -115,6 +121,7 @@ export default {
             })
         },
         async handleSubmit() {
+
             if(!this.canPay || !this.valid) return
             this.processing = true
             const { token, error } = await this.stripe.createToken(this.card);
@@ -132,6 +139,8 @@ export default {
                 }
             })
 
+            const { booking } = order
+
             this.processing = false
 
             if (order.error) {
@@ -139,7 +148,8 @@ export default {
                 return
             }
 
-            this.$ecommerce.trackPurchase({ booking: order });
+            this.$emit('confirmation', { booking })
+            this.$ecommerce.trackPurchase({ booking });
         }
     }
 }

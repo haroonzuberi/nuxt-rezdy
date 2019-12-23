@@ -9,6 +9,8 @@
                     :is="paymentComponent"
                     :booking-fields="bookingFields"
                     :can-pay="hasValidBookingFields"
+                    @processing="status => processing = status"
+                    @confirmation="handleConfirmation"
                 />
             </div>
         </div>
@@ -18,7 +20,11 @@
 <i18n src="./lang.json"></i18n>
 
 <script>
+
+import { createNamespacedHelpers } from 'vuex';
+const { mapActions } = createNamespacedHelpers('rezdy/booking')
 import CheckoutBookingFields from './CheckoutBookingFields.vue'
+
 export default {
     name: 'CheckoutPayment',
     components: {
@@ -37,7 +43,8 @@ export default {
                 custom: () => import('./CheckoutPaymentCustom')
             },
             fields: [],
-            hasValidBookingFields: false
+            hasValidBookingFields: false,
+            processing: false
         }
     },
     computed: {
@@ -46,6 +53,21 @@ export default {
         },
         bookingFields() {
             return []
+        }
+    },
+    methods: {
+        ...mapActions([
+            'clearBooking'
+        ]),
+        handleConfirmation(confirmation) {
+            this.$parent.$parent.close()
+            this.clearBooking()
+            this.$buefy.modal.open({
+                parent: this,
+                component: () => import('./CheckoutConfirmation.vue'),
+                props: { ...confirmation },
+                canCancel: false
+            })
         }
     }
 }
