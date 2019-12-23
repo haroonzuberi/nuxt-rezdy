@@ -1,6 +1,6 @@
 <template>
   <b-field
-    :label="$t(field.label)"
+    :label="type === 'Boolean' ? null : $t(field.label)"
     :class="[{ 'is-required': required }, widthClass]"
     :label-position="type === 'Boolean' ? null : 'inside'"
   >
@@ -108,7 +108,9 @@
       :true-value="1"
       :false-value="0"
 
-    />
+    >
+    {{$t(field.label)}}
+    </b-switch>
     <b-datepicker
       v-else-if="type === 'Date'"
       v-model="updatedValue"
@@ -264,5 +266,7 @@ export default {
   border-color: var(--primary-light);
   box-shadow: 0 0 0 0 rgba(189, 189, 189, 0.25);
 }
-
+.field::v-deep .control-label {
+  color: var(--dark);
+}
 </style>
