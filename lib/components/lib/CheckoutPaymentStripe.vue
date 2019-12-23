@@ -33,7 +33,7 @@
                     size="is-medium"
                     :disabled="!canPay || !valid"
                     icon-left="lock">
-                    {{ $t('pay') }}
+                    {{ $t('pay', { amount: totalDue }) }}
                 </b-button>
             </div>
         </div>
@@ -72,7 +72,11 @@ export default {
     },
     computed: {
         ...mapState({
-            booking: state => state.booking
+            booking: state => state.booking,
+            totalDue(state) {
+                const { totalDue, totalCurrency } = state.quote
+                return this.$options.filters.currency(totalDue, this.$i18n.locale, totalCurrency)
+            }
         })
     },
     mounted() {
