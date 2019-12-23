@@ -42,7 +42,7 @@
                 <td colspan="2" style="white-space: nowrap">- {{ quote.totalPaid | currency($i18n.locale, currency) }}</td>
             </tr>
             <tr>
-                <td colspan="3" style="padding:0">
+                <td colspan="3" style="padding:0; border: none;">
                     <checkout-vouchers />
                 </td>
             </tr>
@@ -102,7 +102,7 @@ export default {
 }
 
 .total-due {
-    font-size: 120%;
+    font-size: 133%;
     font-weight: bold;
 }
 
