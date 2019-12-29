@@ -2,6 +2,22 @@
   <div>
     <h2 class="title">{{$t('select')}} {{ product.unitLabelPlural }}</h2>
     <div class="columns is-multiline">
+      <!-- Group Options -->
+      <div v-if="activeGroupOption" class="column is-one-third">
+        <b-field :message="activeGroupOption.price | currency($i18n.locale, product.currency)" class="pricing-option-field">
+          <checkout-pricing-option
+            :session="session"
+            :quantities="quantities"
+            :total-guests="totalGuests"
+            :option="activeGroupOption"
+            :max="max"
+            :min="0"
+            controls-position="compact"
+            @input="updateGroupCount($event)"
+          />
+        </b-field>
+      </div>
+      <!-- Individual Options -->
       <div class="column is-one-third" v-for="option of individualOptions" :key="option.id" >
         <b-field :message="option.price | currency($i18n.locale, product.currency)" class="pricing-option-field">
             <checkout-pricing-option
