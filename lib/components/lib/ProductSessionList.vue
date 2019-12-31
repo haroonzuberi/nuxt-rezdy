@@ -70,7 +70,8 @@
 </template>
 
 <script>
-import { format, parseISO, endOfDay, addWeeks } from 'date-fns';
+import { utcToZonedTime } from 'date-fns-tz'
+import { format, parseISO, endOfDay, addWeeks,addMinutes } from 'date-fns';
 import { createNamespacedHelpers } from 'vuex';
 const { mapActions } = createNamespacedHelpers('rezdy/booking')
 
@@ -166,7 +167,14 @@ export default {
       this.products = products
 
       this.loading = false
-      return sessions
+      return sessions.filter(session => {
+        if(!session.seats) return;
+        const nowPlusNoticeTz = utcToZonedTime(
+          addMinutes(new Date(), this.products[session.productCode].minimumNoticeMinutes),
+          this.products[session.productCode].timezone
+        )
+        return parseISO(session.startTime) > nowPlusNoticeTz
+      })
     },
     groupByProductCode(sessions) {
       return sessions.reduce((group, session) => {
