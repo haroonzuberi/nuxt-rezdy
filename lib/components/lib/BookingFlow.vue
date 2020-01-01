@@ -13,7 +13,11 @@
             >
 
                 <!-- STEP 1: Session Select -->
-                <b-step-item :label="$t(steps[0].name)" :icon="steps[0].icon">
+                <b-step-item
+                    :label="$t(steps[0].name)"
+                    :icon="steps[0].icon"
+                    v-if="!steps[0].isDisabled()"
+                >
                     <checkout-session-select
                         :product="product"
                         :session.sync="selectedSession"
@@ -41,6 +45,7 @@
                         :participants.sync="participants"
                         :valid.sync="participantsValid"
                     />
+                    <b-loading :is-full-page="false" :active="!selectedSession" />
                 </b-step-item>
 
                 <!-- STEP 3: Extras -->
@@ -108,7 +113,7 @@
 <i18n src="./lang.json" ></i18n>
 
 <script>
-
+import { format } from 'date-fns'
 import { createNamespacedHelpers } from 'vuex';
 const { mapActions, mapState } = createNamespacedHelpers('rezdy/booking')
 
@@ -160,7 +165,7 @@ export default {
                 {
                     name: 'schedule',
                     icon: 'calendar',
-                    isDisabled: () => false,
+                    isDisabled: () => !this.dateRequired,
                     isValid: () => !!this.selectedSession
                 },
                 {
@@ -231,6 +236,10 @@ export default {
         },
         hasPickupLocations() {
             return this.product.pickupId
+        },
+        dateRequired() {
+            if(!this.product) return true
+            return this.product.bookingMode !== 'NO_DATE'
         }
     },
     watch: {
@@ -246,7 +255,7 @@ export default {
         selectedSession:{
             handler(session) {
                 if(session) {
-                    this.currentStep = 1
+                    this.currentStep = this.dateRequired ? 1 : 0
                 }
             },
             immediate: true
@@ -263,15 +272,30 @@ export default {
         }, 200) 
     },
     mounted: async function(){
-        if(this.session) {
-            this.selectedSession = this.session
-        }
 
         const { product } = await this.$parent.$rezdy.getProductByCode(this.productCode)
         const { pickupLocations } = await this.$parent.$rezdy.getProductPickupLocations(this.productCode)
         
         this.product = product
         this.pickupLocations = pickupLocations
+
+        if(this.session) {
+            this.selectedSession = this.session
+        }
+
+        if(!this.dateRequired) {
+            const today = new Date()
+            const startTimeLocal = format(new Date(today.getFullYear(), today.getMonth()), 'yyyy-MM-dd HH:mm:ss')
+            const endTimeLocal = format(new Date(today.getFullYear(), today.getFullYear(), today.getDate() + 7), 'yyyy-MM-dd HH:mm:ss')
+            const { sessions } = await this.$parent.$rezdy.getSessions({
+                productCode: this.productCode,
+                startTimeLocal,
+                endTimeLocal,
+                rspc: 1
+            })
+            this.selectedSession = sessions[0]
+        }
+
         this.$ecommerce.trackCheckoutAdd({ product })
     },
     methods: {
@@ -300,7 +324,7 @@ export default {
             return (step || this.currentStep) === this.activeSteps.length - 1
         },
         handleStepChange(step) {
-            if(this.isLastStep()) {
+            if(this.isLastStep() && this.totalQuantity > 0) {
                 this.addToBooking()
                 return
             }

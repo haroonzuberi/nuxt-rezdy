@@ -7,11 +7,12 @@
                         {{product.name}}
                     </p>
                     <p class="overview-price subtitle is-5 has-text-left-tablet">
-                        {{$t('from')}}
-                        {{ product.advertisedPrice | currency($i18n.locale, product.currency) }} 
-                        |
-                        
-                        {{ product.durationMinutes | durationInWords($t('hours'), $t('minutes')) }}
+                        <span v-if="session && session.priceOptions && session.priceOptions.length > 1">{{$t('from')}}</span>
+                        {{ product.advertisedPrice | currency($i18n.locale, product.currency) }}
+                        <small>/ {{ product.unitLabel}}</small>
+                        <span v-if="product.durationMinutes">
+                            | {{ product.durationMinutes | durationInWords($t('hours'), $t('minutes')) }}
+                        </span>
                     </p>
                     <!-- <div v-for="guest of guests" :key="guest.optionId">
                         {{ guest.value }}x {{ guest.optionLabel }}
@@ -23,7 +24,7 @@
             </div>
         </div>
         <div class="level-right">
-            <div v-if="session" class="level-item">
+            <div v-if="session && product.bookingMode !== 'NO_DATE'" class="level-item">
                 <div>
                     <p class="overview-date title is-5 is-spaced">{{session.startTimeLocal | formatDateLocale("PPPP", $i18n.locale) }}</p>
                     <p class="overview-time subtitle is-4 has-text-right-tablet" v-if="showTime">{{session.startTimeLocal | formatDateLocale("p", $i18n.locale) }}</p>
