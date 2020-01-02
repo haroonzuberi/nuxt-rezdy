@@ -293,7 +293,8 @@ export default {
                 endTimeLocal,
                 rspc: 1
             })
-            this.selectedSession = sessions[0]
+            // select first available session (shouldn't matter which)
+            this.selectedSession = sessions.find(s => s.seatsAvailable > 0)
         }
 
         this.$ecommerce.trackCheckoutAdd({ product })
