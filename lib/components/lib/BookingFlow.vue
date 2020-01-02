@@ -389,6 +389,7 @@ export default {
 
 <style>
 .booking-flow {
+  background-color: var(--white);
   min-height: 300px;
 }
 .participants-enter-active,
