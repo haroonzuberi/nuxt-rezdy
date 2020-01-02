@@ -1,5 +1,5 @@
 <template>
-    <section class="section" v-if="quote && quote.items && quote.items.length">
+    <section class="rezdy-checkout section" v-if="quote && quote.items && quote.items.length">
         <div style="width:100%">
             <h1 class="title">{{ $t('shopping-cart') }}</h1>
             <checkout-order-summary :booking="quote"  />
@@ -52,5 +52,6 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: var(--white);
 }
 </style>
