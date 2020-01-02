@@ -285,7 +285,7 @@ export default {
 
         if(!this.dateRequired) {
             const today = new Date()
-            const startTimeLocal = format(new Date(today.getFullYear(), today.getMonth()), 'yyyy-MM-dd HH:mm:ss')
+            const startTimeLocal = format(new Date(today.getFullYear(), today.getMonth(), today.getDate()), 'yyyy-MM-dd HH:mm:ss')
             const endTimeLocal = format(new Date(today.getFullYear(), today.getFullYear(), today.getDate() + 7), 'yyyy-MM-dd HH:mm:ss')
             const { sessions } = await this.$parent.$rezdy.getSessions({
                 productCode: this.productCode,
