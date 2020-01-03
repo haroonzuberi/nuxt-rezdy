@@ -21,7 +21,7 @@
             group-option
           />
         </b-field>
-        <div>
+        <div v-if="session.priceOptions && session.priceOptions.length > 1">
           <b-collapse aria-id="groupPricing" position="is-bottom" :open="false">
             <p
               class="has-text-centered is-size-7"
