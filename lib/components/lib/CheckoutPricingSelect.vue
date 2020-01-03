@@ -21,6 +21,44 @@
             group-option
           />
         </b-field>
+        <div>
+          <b-collapse aria-id="groupPricing" position="is-bottom" :open="false">
+            <p
+              class="has-text-centered is-size-7"
+              slot="trigger"
+              slot-scope="props"
+              role="button"
+              aria-controls="groupPricing"
+            >
+              <a>{{
+                $t('toggle-group-pricing', {
+                  action: props.open ? $t('hide') : $t('show')
+                })
+              }}</a>
+            </p>
+            <table class="table is-fullwidth is-bordered">
+              <thead>
+                <th colspan="2" class="has-text-centered">
+                  {{ $t('group-pricing') }}
+                </th>
+              </thead>
+              <tbody class="is-size-7">
+                <tr
+                  v-for="(option, o) of session.priceOptions"
+                  :key="o"
+                  :class="{ 'is-selected': activeGroupOption === option }"
+                >
+                  <th>{{ option.label }}</th>
+                  <td class="is-numeric">
+                    {{
+                      option.price | currency($i18n.locale, product.currency)
+                    }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </b-collapse>
+        </div>
       </div>
       <!-- Individual Options -->
       <div
