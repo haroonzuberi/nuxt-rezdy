@@ -40,7 +40,7 @@
             </div>
             <div class="level-right">
               <ul class="level-item">
-                <li v-for="session of group" :key="session.id" class="session-time">
+                <li v-for="session of group" :key="session.id" class="rezdy--session-time">
                   <slot name="session" v-bind:session="session" />
                   <b-button type="is-success" size="is-medium" @click="addBookingItem(session)" :disabled="!session.seatsAvailable">
                     {{ session.startTimeLocal | formatSessionTime }}
@@ -223,7 +223,7 @@ export default {
   grid-area: footer;
 }
 
-.session-time {
+.rezdy--session-time {
   padding: 4px;
 }
 .sessions-load-more {

@@ -31,32 +31,36 @@
               :key="s.id"
               class="column is-half has-text-centered"
             >
-              <b-button
-                :disabled="!s.seatsAvailable"
-                type="is-success"
-                size="is-large"
-                @click="selectSession(s)"
-              >
-                {{ s.startTimeLocal | formatDateLocale('p', $i18n.locale) }}
-              </b-button>
-              <div
-                class="rezdy--seating-availability"
-                v-if="$parent.$rezdy.availability"
-              >
-                <span
-                  v-if="
-                    s.seatsAvailable > 0 && s.seatsAvailable <= $parent.$rezdy.availability.threshold
-                  "
-                  class="rezdy--session-availability-remaining"
-                  >{{ $t('x-remaining', { amount: s.seatsAvailable }) }}</span
+              <div class="rezdy--session-time">
+                <b-button
+                  :disabled="!s.seatsAvailable"
+                  type="is-success"
+                  size="is-large"
+                  @click="selectSession(s)"
                 >
-                <span
-                  class="rezdy--session-availability-soldout"
-                  v-if="s.seatsAvailable === 0"
-                  >{{ $t('sold-out') }}</span
-                >
+                  {{ s.startTimeLocal | formatDateLocale('p', $i18n.locale) }}
+                </b-button>
+                <div v-if="$parent.$rezdy.availability">
+                  <div
+                    v-if="
+                      s.seatsAvailable > 0 &&
+                        s.seatsAvailable <=
+                          $parent.$rezdy.availability.threshold
+                    "
+                    class="rezdy--availability-remaining"
+                  >
+                    <span>{{
+                      $t('x-remaining', { amount: s.seatsAvailable })
+                    }}</span>
+                  </div>
+                  <div
+                    v-if="s.seatsAvailable === 0"
+                    class="rezdy--availability-soldout"
+                  >
+                    <span>{{ $t('sold-out') }}</span>
+                  </div>
+                </div>
               </div>
-              <!-- {{ session.seatsAvailable }} -->
             </li>
           </ul>
         </div>
