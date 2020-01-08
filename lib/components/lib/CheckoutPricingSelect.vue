@@ -22,7 +22,7 @@
           />
         </b-field>
         <div v-if="session.priceOptions && session.priceOptions.length > 1">
-          <b-collapse aria-id="groupPricing" position="is-bottom" :open="false">
+          <b-collapse aria-id="groupPricing" position="is-bottom" :open="true">
             <p
               class="has-text-centered is-size-7"
               slot="trigger"
