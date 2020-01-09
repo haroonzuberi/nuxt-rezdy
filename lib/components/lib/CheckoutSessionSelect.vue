@@ -8,6 +8,7 @@
           v-model="selectedDate"
           inline
           nearby-selectable-month-days
+          :min-date="new Date()"
           :month-names="monthNames"
           :events="events"
           :selectable-dates="selectableDates"
