@@ -213,8 +213,6 @@ export default {
 }
 .session-product-heading {
   grid-area: heading;
-  display: flex;
-  align-items: center;
 }
 .session-product-body {
   grid-area: body;
