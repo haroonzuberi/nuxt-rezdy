@@ -431,6 +431,7 @@ export default {
   }
 
   #booking-flow-controls .level-right .button {
+    display: block;
     width: 100%;
   }
 
