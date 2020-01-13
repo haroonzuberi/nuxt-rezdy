@@ -214,5 +214,6 @@ export default {
 
 .pricing-option-field::v-deep .help {
   text-align: center;
+  font-size: 16px;
 }
 </style>
