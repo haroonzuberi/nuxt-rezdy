@@ -18,7 +18,7 @@
       :icon="icon"
       :required="required"
     />
-    <div class="control" v-else-if="type === 'Phone'">
+    <div v-else-if="type === 'Phone'" class="control">
       <vue-tel-input
         v-model="updatedValue"
         :required="required"
@@ -40,19 +40,19 @@
       :placeholder="$t('select') + '…'"
       expanded
     >
-      <option value="Internet search">{{$t('Internet search')}}</option>
-      <option value="Friend">{{$t('Friend')}}</option>
-      <option value="Social Media">{{$t('Social Media')}}</option>
-      <option value="Coupon website">{{$t('Coupon website')}}</option>
-      <option value="Gift card">{{$t('Gift card')}}</option>
-      <option value="Brochure">{{$t('Brochure')}}</option>
-      <option value="Signage">{{$t('Signage')}}</option>
-      <option value="TV">{{$t('TV')}}</option>
-      <option value="Radio">{{$t('Radio')}}</option>
-      <option value="Press">{{$t('Press')}}</option>
-      <option value="Flyer">{{$t('Flyer')}}</option>
-      <option value="Agent">{{$t('Agent')}}</option>
-      <option value="Other">{{$t('Other')}}</option>
+      <option value="Internet search">{{ $t('Internet search') }}</option>
+      <option value="Friend">{{ $t('Friend') }}</option>
+      <option value="Social Media">{{ $t('Social Media') }}</option>
+      <option value="Coupon website">{{ $t('Coupon website') }}</option>
+      <option value="Gift card">{{ $t('Gift card') }}</option>
+      <option value="Brochure">{{ $t('Brochure') }}</option>
+      <option value="Signage">{{ $t('Signage') }}</option>
+      <option value="TV">{{ $t('TV') }}</option>
+      <option value="Radio">{{ $t('Radio') }}</option>
+      <option value="Press">{{ $t('Press') }}</option>
+      <option value="Flyer">{{ $t('Flyer') }}</option>
+      <option value="Agent">{{ $t('Agent') }}</option>
+      <option value="Other">{{ $t('Other') }}</option>
     </b-select>
     <b-select
       v-else-if="type === 'Language'"
@@ -60,7 +60,6 @@
       :icon="icon"
       :required="required"
       :placeholder="$t('select') + '…'"
-
       expanded
     >
       <option value="en">English</option>
@@ -87,7 +86,6 @@
       :icon="icon"
       :required="required"
       :placeholder="$t('select') + '…'"
-
       expanded
     >
       <option
@@ -107,9 +105,8 @@
       :required="required"
       :true-value="1"
       :false-value="0"
-
     >
-    {{$t(field.label)}}
+      {{ $t(field.label) }}
     </b-switch>
     <b-datepicker
       v-else-if="type === 'Date'"
@@ -118,7 +115,6 @@
       :month-names="monthNames"
       icon="calendar"
       :max-date="maxDate"
-
     />
     <div v-else>UNKNOWN FIELD TYPE: {{ type }}</div>
   </b-field>
@@ -127,7 +123,6 @@
 <i18n src="./lang.json"></i18n>
 
 <script>
-import { format } from 'date-fns'
 import BirthdateInput from './BirthdateInput.vue'
 export default {
   components: {
@@ -150,70 +145,70 @@ export default {
   data() {
     return {
       valid: false
-    };
+    }
   },
   computed: {
     maxDate() {
-      return this.field.label.toLowerCase() === 'date of birth' ? new Date() : null
+      return this.field.label.toLowerCase() === 'date of birth'
+        ? new Date()
+        : null
     },
     monthNames() {
       return Object.values(this.$t('months'))
     },
     type() {
       switch (this.field.label) {
-        case "Date of Birth":
-        case "Date of birth":
-          return "Birthdate"
-        case "Special Requirements":
-          return "Textarea"
-        case "Preferred Language":
-          return "Language"
-        case "How did you hear about us?":
-          return "Attribution"
+        case 'Date of Birth':
+        case 'Date of birth':
+          return 'Birthdate'
+        case 'Special Requirements':
+          return 'Textarea'
+        case 'Preferred Language':
+          return 'Language'
+        case 'How did you hear about us?':
+          return 'Attribution'
       }
-      return this.field.fieldType;
+      return this.field.fieldType
     },
     icon() {
       switch (this.field.label) {
-        case "Birthdate":
-          return 'calendar';
-        case "Email":
-          return "envelope";
-        case "First Name":
-        case "Last Name":
-          return "user";
-        case "Preferred Language":
-          return "language";
+        case 'Birthdate':
+          return 'calendar'
+        case 'Email':
+          return 'envelope'
+        case 'First Name':
+        case 'Last Name':
+          return 'user'
+        case 'Preferred Language':
+          return 'language'
       }
-      return null;
+      return null
     },
     widthClass() {
       return [
-        "First Name",
-        "Last Name",
-        "Email",
-        "Phone",
-        "Mobile",
-        "Date",
-        "List",
-        "Birthdate",
-        "City",
-        "State/County/Region",
-        "Postcode/ZIP"
-      ].some(
-        label => this.field.label === label || this.type === label
-      )
-        ? "is-half"
-        : "is-full";
+        'First Name',
+        'Last Name',
+        'Email',
+        'Phone',
+        'Mobile',
+        'Date',
+        'List',
+        'Birthdate',
+        'City',
+        'State/County/Region',
+        'Postcode/ZIP'
+      ].some(label => this.field.label === label || this.type === label)
+        ? 'is-half'
+        : 'is-full'
     },
     updatedValue: {
       get() {
         // Need to force strings on boolean return due to accepting Boolean values as props
         if (
-          this.field.fieldType !== "Boolean" &&
-          typeof this.value === "boolean"
+          this.field.fieldType !== 'Boolean' &&
+          typeof this.value === 'boolean'
         ) {
-          return "";
+          return ''
         }
 
         /* if (
@@ -222,45 +217,64 @@ export default {
           return format(this.value);
         } */
 
-        if (this.field.fieldType === "List" && this.field.label === "Country") {
-          return this.value || "UK";
+        if (this.field.fieldType === 'List' && this.field.label === 'Country') {
+          const { localization } = this.$rezdy
+          return (
+            this.value ||
+            (localization && localization.defaultCountry
+              ? localization.defaultCountry
+              : 'UK')
+          )
         }
-        return this.value;
+        return this.value
       },
       set(val) {
-        this.$emit("update", val);
+        this.$emit('update', val)
       }
     }
   },
   methods: {
     parseListOptions(items, type) {
       // rezdy uses line breaks to separate list items!  joy.
-      if (type === "Country")
-        return this.$rezdy.countries.map(c => ({
+      if (type === 'Country') {
+        const countries = this.$rezdy.countries.map(c => ({
           name: c.name,
           value: c.alpha2Code
-        }));
-      if (type === "Title")
+        }))
+        if (
+          this.$rezdy.localization &&
+          this.$rezdy.localization.defaultCountry
+        ) {
+          const { defaultCountry } = this.$rezdy.localization
+          return [
+            countries.find(c => c.value === defaultCountry),
+            ...countries.filter(c => c.value !== defaultCountry)
+          ]
+        }
+        return countries
+      }
+
+      if (type === 'Title')
         return [
-          { name: "Mr.", value: "MR" },
-          { name: "Ms.", value: "MS" },
-          { name: "Mrs.", value: "MRSS" },
-          { name: "Miss", value: "MISS" }
-        ];
-      if (type === "Gender")
-        return [
-          { name: "Male", value: "MALE" },
-          { name: "Female", value: "FEMALE" }
+          { name: 'Mr.', value: 'MR' },
+          { name: 'Ms.', value: 'MS' },
+          { name: 'Mrs.', value: 'MRSS' },
+          { name: 'Miss', value: 'MISS' }
         ]
-      return items.split(/\r\n|\r|\n/g);
+      if (type === 'Gender')
+        return [
+          { name: 'Male', value: 'MALE' },
+          { name: 'Female', value: 'FEMALE' }
+        ]
+      return items.split(/\r\n|\r|\n/g)
     }
   }
-};
+}
 </script>
 
 <style scoped>
-.vue-tel-input::v-deep input{
-  background-color:  transparent;
+.vue-tel-input::v-deep input {
+  background-color: transparent;
 }
 .vue-tel-input:focus-within {
   border-color: var(--primary-light);
