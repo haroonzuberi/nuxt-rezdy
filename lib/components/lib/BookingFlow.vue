@@ -87,21 +87,22 @@
       </b-steps>
       <div id="booking-flow-controls" class="level">
         <div class="level-left">
-          <b-button
-            class="level-item booking-control-previous"
-            type="is-success"
-            outlined
-            @click="prev()"
-            :disabled="currentStep === 0"
-          >
-            {{ $t('previous') }}
-          </b-button>
-          <b-button
-            class="level-item booking-control-next"
-            @click="$parent.close()"
-          >
+          <div class="level-item">
+            <b-button
+              class="booking-control-previous"
+              type="is-success"
+              outlined
+              @click="prev()"
+              :disabled="currentStep === 0"
+            >
+              {{ $t('previous') }}
+            </b-button>
+          </div>
+          <div class="level-item">
+          <b-button class="booking-control-next" @click="$parent.close()">
             {{ $t('cancel') }}
           </b-button>
+          </div>
         </div>
         <div class="level-item" v-if="totalDue > 0 || loadingTotal">
           <span v-if="!loadingTotal" class="booking-checkout-total">
@@ -110,15 +111,17 @@
           <span v-else>{{ $t('loading') }} ...</span>
         </div>
         <div class="level-right">
-          <b-button
-            class="level-item booking-control-continue"
-            type="is-success"
-            size="is-large"
-            @click="next()"
-            :disabled="!valid"
-          >
-            {{ $t('continue') }}
-          </b-button>
+          <div class="level-item">
+            <b-button
+              class="booking-control-continue"
+              type="is-success"
+              size="is-large"
+              @click="next()"
+              :disabled="!valid"
+            >
+              {{ $t('continue') }}
+            </b-button>
+          </div>
         </div>
       </div>
     </div>
