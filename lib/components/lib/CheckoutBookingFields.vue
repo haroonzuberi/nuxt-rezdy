@@ -60,7 +60,6 @@ export default {
     watch: {
         items: {
             async handler(items) {
-                console.log(items)
                 const { products } = await this.$rezdy.getProducts({
                     productCode: items.map(i => i.productCode)
                 })

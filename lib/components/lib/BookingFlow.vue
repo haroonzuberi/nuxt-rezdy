@@ -274,7 +274,7 @@ export default {
         this.$ecommerce.trackCheckoutStep({
           step: this.currentStep + 1,
           option: this.steps[this.currentStep].name,
-          item: { ...session, quantities, extras }
+          item: { ...session, quantities, extras, productCode: this.productCode }
         })
       },
       immediate: true
