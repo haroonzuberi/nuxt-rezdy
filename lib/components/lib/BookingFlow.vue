@@ -385,6 +385,11 @@ export default {
         this.$parent.close()
         this.$rezdy.checkout(this)
       })
+      // Track checkout
+      this.$ecommerce.trackCheckoutStep({
+        step: this.steps.length,
+        option: this.steps[this.steps.length - 1].name
+      })
     }
   }
 }
