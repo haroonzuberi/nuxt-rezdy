@@ -270,9 +270,11 @@ export default {
   watch: {
     currentStep: {
       handler(step) {
+        const { session, quantities, extras } = this.quote
         this.$ecommerce.trackCheckoutStep({
           step: this.currentStep + 1,
-          option: this.steps[this.currentStep].name
+          option: this.steps[this.currentStep].name,
+          item: { ...session, quantities, extras }
         })
       },
       immediate: true
@@ -297,9 +299,7 @@ export default {
     }, 200)
   },
   async mounted() {
-    const { product } = await this.$parent.$rezdy.getProductByCode(
-      this.productCode
-    )
+    const product = await this.$parent.$rezdy.getProductByCode(this.productCode)
     const {
       pickupLocations
     } = await this.$parent.$rezdy.getProductPickupLocations(this.productCode)
