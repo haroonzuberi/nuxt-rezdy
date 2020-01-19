@@ -9,6 +9,7 @@
                     :is="paymentComponent"
                     :booking-fields="bookingFields"
                     :can-pay="hasValidBookingFields"
+                    :fields="fields"
                     @processing="status => processing = status"
                     @confirmation="handleConfirmation"
                 />

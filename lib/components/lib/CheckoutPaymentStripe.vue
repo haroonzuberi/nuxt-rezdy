@@ -56,7 +56,7 @@ const { mapState } = createNamespacedHelpers('rezdy/booking')
 export default {
   name: 'CheckoutPaymentStripe',
   props: {
-    bookingFields: {
+    fields: {
       type: Array,
       default: () => []
     },
