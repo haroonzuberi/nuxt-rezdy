@@ -109,7 +109,17 @@
     "Press": "Press",
     "Flyer": "A Handout",
     "Agent": "Travel Agent",
-    "Other": "Other"
+    "Other": "Other",
+    "Fishing": "Fishing",
+    "Diving": "Diving",
+    "Jet Skiing": "Jet Skiing",
+    "Scuba Diving & Snorkeling": "Scuba Diving & Snorkeling",
+    "Uncategorized": "Uncategorized",
+    "Horse Riding": "Horse Riding",
+    "Cultural Tours": "Cultural Tours",
+    "Segways": "Segways",
+    "Cycling Tours": "Cycling Tours",
+    "Private Tours": "Private Tours"
   },
   "it": {
     "add-detail": "Aggiungi maggiori dettagli",
@@ -225,7 +235,10 @@
     "Scuba Diving & Snorkeling": "Immersioni e snorkeling",
     "Uncategorized": "Non categorizzato",
     "Horse Riding": "Equitazione",
-    "Cultural Tours": "Tour culturali"
+    "Cultural Tours": "Tour culturali",
+    "Segways": "Segways",
+    "Cycling Tours": "Cycling Tours",
+    "Private Tours": "Private Tours"
   },
   "fr": {
     "add-detail": "Ajouter des détails supplémentaires",
@@ -337,7 +350,10 @@
     "Press": "Presse",
     "Flyer": "Un document",
     "Agent": "Agent de voyage",
-    "Other": "Autre"
+    "Other": "Autre",
+    "Segways": "Segways",
+    "Cycling Tours": "Cycling Tours",
+    "Private Tours": "Private Tours"
   },
   "de": {
     "add-detail": "Zusätzliches Detail hinzufügen",
@@ -449,7 +465,10 @@
     "Press": "Drücken Sie",
     "Flyer": "Ein Handout",
     "Agent": "Reisebüro",
-    "Other": "Andere"
+    "Other": "Andere",
+    "Segways": "Segways",
+    "Cycling Tours": "Cycling Tours",
+    "Private Tours": "Private Tours"
   },
   "es": {
     "add-detail": "Agregar detalles adicionales",
@@ -561,7 +580,10 @@
     "Press": "Prensa",
     "Flyer": "Un folleto",
     "Agent": "Agente de viajes",
-    "Other": "Otro"
+    "Other": "Otro",
+    "Segways": "Segways",
+    "Cycling Tours": "Cycling Tours",
+    "Private Tours": "Private Tours"
   },
   "pt": {
     "add-detail": "Adicionar detalhes adicionais",
@@ -673,6 +695,9 @@
     "Press": "Pressione",
     "Flyer": "Um folheto",
     "Agent": "Agente de viagens",
-    "Other": "De outros"
+    "Other": "De outros",
+    "Segways": "Segways",
+    "Cycling Tours": "Cycling Tours",
+    "Private Tours": "Private Tours"
   }
 }
