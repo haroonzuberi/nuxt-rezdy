@@ -119,7 +119,15 @@
     "Cultural Tours": "Cultural Tours",
     "Segways": "Segways",
     "Cycling Tours": "Cycling Tours",
-    "Private Tours": "Private Tours"
+    "Private Tours": "Private Tours",
+    "PROCESSING": "Your order is processing.",
+    "NEW": "Success!",
+    "ON_HOLD": "Your order is currently on hold.",
+    "PENDING_SUPPLIER": "Your order is currently pending supplier confirmation.",
+    "PENDING_CUSTOMER": "Your order may require additional details",
+    "CONFIRMED": "Your order is confirmed!",
+    "CANCELLED": "Your order has been cancelled.",
+    "ABANDONED_CART": "Your cart was abandoned."
   },
   "it": {
     "add-detail": "Aggiungi maggiori dettagli",
@@ -236,9 +244,17 @@
     "Uncategorized": "Non categorizzato",
     "Horse Riding": "Equitazione",
     "Cultural Tours": "Tour culturali",
-    "Segways": "Segways",
-    "Cycling Tours": "Cycling Tours",
-    "Private Tours": "Private Tours"
+    "Segways": "Segway",
+    "Cycling Tours": "Tour in bicicletta",
+    "Private Tours": "Tour privati",
+    "PROCESSING": "Il tuo ordine è in elaborazione.",
+    "NEW": "Successo!",
+    "ON_HOLD": "Il tuo ordine è attualmente in attesa.",
+    "PENDING_SUPPLIER": "Il tuo ordine è attualmente in attesa di conferma del fornitore.",
+    "PENDING_CUSTOMER": "Il tuo ordine potrebbe richiedere ulteriori dettagli.",
+    "CONFIRMED": "Il tuo ordine è confermato!",
+    "CANCELLED": "Il tuo ordine è stato cancellato.",
+    "ABANDONED_CART": "Il tuo carrello è stato abbandonato."
   },
   "fr": {
     "add-detail": "Ajouter des détails supplémentaires",
@@ -352,8 +368,16 @@
     "Agent": "Agent de voyage",
     "Other": "Autre",
     "Segways": "Segways",
-    "Cycling Tours": "Cycling Tours",
-    "Private Tours": "Private Tours"
+    "Cycling Tours": "Tours à vélo",
+    "Private Tours": "Visites privées",
+    "PROCESSING": "Votre commande est en cours de traitement.",
+    "NEW": "Succès!",
+    "ON_HOLD": "Votre commande est actuellement en attente.",
+    "PENDING_SUPPLIER": "Votre commande est actuellement en attente de confirmation du fournisseur.",
+    "PENDING_CUSTOMER": "Votre commande peut nécessiter des détails supplémentaires.",
+    "CONFIRMED": "Votre commande est confirmée!",
+    "CANCELLED": "Votre commande a été annulée.",
+    "ABANDONED_CART": "Votre panier a été abandonné."
   },
   "de": {
     "add-detail": "Zusätzliches Detail hinzufügen",
@@ -467,8 +491,16 @@
     "Agent": "Reisebüro",
     "Other": "Andere",
     "Segways": "Segways",
-    "Cycling Tours": "Cycling Tours",
-    "Private Tours": "Private Tours"
+    "Cycling Tours": "Fahrradtouren",
+    "Private Tours": "Private Führungen",
+    "PROCESSING": "Ihre Bestellung wird bearbeitet.",
+    "NEW": "Erfolg!",
+    "ON_HOLD": "Ihre Bestellung wird derzeit zurückgestellt.",
+    "PENDING_SUPPLIER": "Ihre Bestellung wird derzeit von einem Lieferanten bestätigt.",
+    "PENDING_CUSTOMER": "Ihre Bestellung kann zusätzliche Details erfordern.",
+    "CONFIRMED": "Ihre Bestellung ist bestätigt!",
+    "CANCELLED": "Ihre Bestellung wurde storniert.",
+    "ABANDONED_CART": "Ihr Warenkorb wurde aufgegeben."
   },
   "es": {
     "add-detail": "Agregar detalles adicionales",
@@ -582,8 +614,16 @@
     "Agent": "Agente de viajes",
     "Other": "Otro",
     "Segways": "Segways",
-    "Cycling Tours": "Cycling Tours",
-    "Private Tours": "Private Tours"
+    "Cycling Tours": "Tours en bicicleta",
+    "Private Tours": "Tours privados",
+    "PROCESSING": "Tu pedido se está procesando.",
+    "NEW": "¡Éxito!",
+    "ON_HOLD": "Su pedido está actualmente en espera.",
+    "PENDING_SUPPLIER": "Su pedido está actualmente pendiente de confirmación del proveedor.",
+    "PENDING_CUSTOMER": "Su pedido puede requerir detalles adicionales.",
+    "CONFIRMED": "Su pedido esta confirmado!",
+    "CANCELLED": "Su pedido ha sido cancelado.",
+    "ABANDONED_CART": "Tu carro fue abandonado."
   },
   "pt": {
     "add-detail": "Adicionar detalhes adicionais",
@@ -697,7 +737,15 @@
     "Agent": "Agente de viagens",
     "Other": "De outros",
     "Segways": "Segways",
-    "Cycling Tours": "Cycling Tours",
-    "Private Tours": "Private Tours"
+    "Cycling Tours": "Passeios de bicicleta",
+    "Private Tours": "Passeios particulares",
+    "PROCESSING": "Seu pedido está em processamento.",
+    "NEW": "Sucesso!",
+    "ON_HOLD": "Seu pedido está em espera no momento.",
+    "PENDING_SUPPLIER": "No momento, seu pedido está pendente de confirmação do fornecedor.",
+    "PENDING_CUSTOMER": "Seu pedido pode exigir detalhes adicionais.",
+    "CONFIRMED": "Seu pedido está confirmado!",
+    "CANCELLED": "Seu pedido foi cancelado.",
+    "ABANDONED_CART": "Seu carrinho foi abandonado."
   }
 }
