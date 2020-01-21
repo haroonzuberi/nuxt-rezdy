@@ -59,6 +59,10 @@ export default {
   async mounted() {
     const { company } = await this.$rezdy.getCompany(this.companyAlias)
     this.company = company
+    document.documentElement.classList.add('has-modal')
+  },
+  beforeDestroy() {
+    document.documentElement.classList.remove('has-modal')
   },
   methods: {
     printConfirmation() {
@@ -70,7 +74,7 @@ export default {
 
 <style>
 @media print {
-  #__nuxt {
+  .has-modal #__nuxt {
     display: none;
   }
   .rezdy--checkout-confirmation .confirmation-actions {
