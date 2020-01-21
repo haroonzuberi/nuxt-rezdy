@@ -1,5 +1,5 @@
 <template>
-  <div v-if="booking" class="section is-large checkout-confirmation">
+  <div v-if="booking" class="section is-large rezdy--checkout-confirmation">
     <h1 class="title">{{ $t('thank-you-order') }}</h1>
     <p class="subtitle is-5">
       {{ $t('thank-you-order-no') }}
@@ -68,20 +68,21 @@ export default {
 }
 </script>
 
-<style scoped>
-.confirmation-actions {
+<style>
+@media print {
+  #__nuxt {
+    display: none;
+  }
+  .rezdy--checkout-confirmation .confirmation-actions {
+    display: none !important;
+  }
+}
+.rezdy--checkout-confirmation .confirmation-actions {
   display: flex;
   justify-content: center;
   margin-top: 2rem;
 }
-
-.confirmation-actions > .button {
+.rezdy--checkout-confirmation .confirmation-actions > .button {
   margin: 4px;
-}
-
-@media print {
-  .confirmation-actions {
-    display: none;
-  }
 }
 </style>
