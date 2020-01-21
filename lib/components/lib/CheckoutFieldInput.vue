@@ -24,6 +24,7 @@
         :required="required"
         wrapper-classes="input"
         dynamic-placeholder
+        mode="international"
       ></vue-tel-input>
     </div>
     <birthdate-input
