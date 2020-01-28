@@ -238,10 +238,19 @@ export default {
     parseListOptions(items, type) {
       // rezdy uses line breaks to separate list items!  joy.
       if (type === 'Country') {
-        const countries = this.$rezdy.countries.map(c => ({
-          name: c.name,
-          value: c.alpha2Code
-        }))
+        const countries = this.$rezdy.countries
+          .map(c => ({
+            name: c.name,
+            value: c.alpha2Code
+          }))
+          .sort((a, b) =>
+            a.name.toLowerCase() > b.name.toLowerCase()
+              ? 1
+              : a.name.toLowerCase() < b.name.toLowerCase()
+              ? -1
+              : 0
+          )
+
         if (
           this.$rezdy.localization &&
           this.$rezdy.localization.defaultCountry
@@ -267,6 +276,7 @@ export default {
           { name: 'Male', value: 'MALE' },
           { name: 'Female', value: 'FEMALE' }
         ]
+      if (!items) return []
       return items.split(/\r\n|\r|\n/g)
     }
   }
