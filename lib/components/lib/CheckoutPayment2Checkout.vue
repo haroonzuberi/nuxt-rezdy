@@ -101,7 +101,7 @@ export default {
       const script = document.createElement('script')
       script.onload = this.buildForm
       script.type = 'text/javascript'
-      script.src = 'https://js.2pay.2checkout.com/v1/'
+      script.src = 'https://2pay-js.2checkout.com/v1/2pay.js'
       document.head.appendChild(script)
     }
   },
@@ -132,7 +132,11 @@ export default {
       if (!this.canPay || !this.valid) return
 
       const { totalDue, totalCurrency } = this.quote
-      const { ip, country } = await this.$axios.$get('https://ipinfo.io/json')
+
+      // TODO: THIS NEEDS TO BE PART OF THE REZDY API (TOKEN REQUIRED)
+      const { ip, country } = await this.$axios.$get('https://ipinfo.io/json', {
+        headers: { Authorization: `Bearer ${this.rezdyOptions.twoCheckout.ipInfoKey}` }
+      })
       // get required details for 2pay
       const {
         Email,
