@@ -10,11 +10,8 @@
       />
     </div>
     <b-field :label="$t('credit-debit')" label-for="card-element">
-      <div class="control">
-        <div id="card-element" class="input" :class="cardClass">
-          2pay.js checkout card element will load here:
-          {{ $t('loading') }}...
-        </div>
+      <div class="control" :class="cardClass">
+        <div id="card-element"></div>
       </div>
     </b-field>
     <div class="level">
@@ -114,29 +111,25 @@ export default {
       })
     },
     buildForm() {
-      // const { publishableKey, fonts, style } = this.$rezdy.twocheckout
-      this.client = new TwoPayClient('RDGM')
+      this.client = new TwoPayClient(this.rezdyOptions.twoCheckout.merchantCode)
       this.card = this.client.components.create('card')
       this.card.mount('#card-element')
-      this.card.on('focus', () => (this.cardClass = 'is-active'))
-      this.card.on('blur', () => (this.cardClass = ''))
-      /* this.card.on('change', event => {
-        if (event.complete) {
-          this.valid = true
-        } else if (event.error) {
-          this.valid = false
-        }
-      }) */
     },
     async handleSubmit() {
-      if (!this.canPay || !this.valid) return
-
+      if (!this.canPay) return
+      let token
       const { totalDue, totalCurrency } = this.quote
 
       // TODO: THIS NEEDS TO BE PART OF THE REZDY API (TOKEN REQUIRED)
-      const { ip, country } = await this.$axios.$get('https://ipinfo.io/json', {
-        headers: { Authorization: `Bearer ${this.rezdyOptions.twoCheckout.ipInfoKey}` }
-      })
+      /* const { ip, country } = await this.$axios.$get('https://ipinfo.io/json', {
+        headers: {
+          Authorization: `Bearer ${this.rezdyOptions.twoCheckout.ipInfoKey}`
+        }
+      }) */
+
+      const ip = '127.0.0.1'
+      const country = 'US'
+
       // get required details for 2pay
       const {
         Email,
@@ -169,22 +162,22 @@ export default {
         return obj
       }, {})
 
-      console.log(this.fields)
+      this.processing = true
 
-      /* 
-      TODO: Waiting on 2pay.js
-        this.processing = true
-        const { token, error } = await this.client.tokens.generate(this.card, {
-          name: 'Test Person'
+      try {
+        token = await this.client.tokens.generate(this.card, {
+          name: FirstName
         })
+      } catch (error) {
+        console.error(error)
+        this.handleError({
+          message: 'There was an issue processing your payment information.'
+        })
+        this.processing = false
+        return
+      }
 
-        if (error) {
-          this.handleError({ message: error.message })
-          return
-        }
-
-        console.log(token)
-      */
+      console.log(token)
 
       // https://knowledgecenter.2checkout.com/API-Integration/REST_5.0_Reference#/reference/orders-with-dynamic-products
 
