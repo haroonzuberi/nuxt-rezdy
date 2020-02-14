@@ -111,8 +111,9 @@ export default {
       })
     },
     buildForm() {
-      this.client = new TwoPayClient(this.rezdyOptions.twoCheckout.merchantCode)
-      this.card = this.client.components.create('card')
+      const { merchantCode, cardStyle } = this.rezdyOptions.twoCheckout
+      this.client = new TwoPayClient(merchantCode)
+      this.card = this.client.components.create('card', cardStyle || {})
       this.card.mount('#card-element')
     },
     async handleSubmit() {
