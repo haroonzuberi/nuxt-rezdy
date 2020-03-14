@@ -44,7 +44,8 @@ export default {
     return {
       paymentComponents: {
         stripe: () => import('./CheckoutPaymentStripe'),
-        '2checkout': () => import('./CheckoutPayment2Checkout')
+        '2checkout': () => import('./CheckoutPayment2Checkout'),
+        vinti4: () => import('./CheckoutPaymentVinti4')
       },
       fields: [],
       hasValidBookingFields: false,
