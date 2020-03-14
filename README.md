@@ -22,6 +22,21 @@ yarn add nuxt-rezdy # or npm install nuxt-rezdy
 }
 ```
 
+Force additional required Rezdy fields by adding fieldOverrides to the module configuration.
+
+```js
+fieldOverrides: [
+  { label: 'First Name', fieldType: 'String' },
+  { label: 'Last Name', fieldType: 'String' },
+  { label: 'Address', fieldType: 'String' },
+  { label: 'City', fieldType: 'String' },
+  { label: 'Country', fieldType: 'List' },
+  { label: 'Email', fieldType: 'String' },
+  { label: 'Postcode/ZIP', fieldType: 'String', countries: ['US', 'BR', 'RO'] },
+  { label: 'State/County/Region', fieldType: 'String', countries: ['US', 'BR', 'RO', 'IN'] }
+]
+```
+
 ## Development
 
 1. Clone this repository
