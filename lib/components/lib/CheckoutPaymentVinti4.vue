@@ -97,9 +97,6 @@ export default {
   },
   beforeDestroy() {
     window.removeEventListener('message', this.receiveMessage, false)
-    if (this.paymentWindow) {
-      this.paymentWindow.removeEventListener('unload', this.handleAbandonment)
-    }
   },
   methods: {
     handleError(error) {
@@ -111,7 +108,6 @@ export default {
     },
     receiveMessage(message) {
       if (!message || !message.data) return
-      this.paymentWindow.removeEventListener('unload', this.handleAbandonment)
       this.paymentWindow.close()
       const { status, code } = JSON.parse(message.data)
       if (status === 'success') {
@@ -141,14 +137,6 @@ export default {
       this.handleError({
         message: this.$t('processing-error')
       })
-      this.processing = false
-    },
-    async handleAbandonment(code) {
-      await this.$rezdy.updateBookingStatus(
-        this.completedBooking.orderNumber,
-        this.completedBooking,
-        'ABANDONED_CART'
-      )
       this.processing = false
     },
     async handleSubmit() {
@@ -214,8 +202,6 @@ export default {
         'Vinti4 Payment',
         `width=500,height=795,location=no,toolbar=no,menubar=no,status=no,titlebar=no,top=${paymentWindowOptions.top},left=${paymentWindowOptions.left}`
       )
-
-      this.paymentWindow.addEventListener('unload', this.handleAbandonment)
     }
   }
 }
