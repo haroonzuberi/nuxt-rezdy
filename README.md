@@ -37,6 +37,13 @@ fieldOverrides: [
 ]
 ```
 
+Vinti4 requires an urlMerchantResponse as a vinti4 option
+```js
+vinti4: {
+  urlMerchantResponse: YOUR_CUSTOM_URL
+}
+```
+
 ## Development
 
 1. Clone this repository

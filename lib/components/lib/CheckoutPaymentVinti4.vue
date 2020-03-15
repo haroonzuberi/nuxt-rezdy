@@ -181,8 +181,7 @@ export default {
       const query = qs({
         token,
         amount,
-        // urlMerchantResponse: `https://nolimitsadventure.netlify.com/.netlify/functions/paymentResponse`,
-        urlMerchantResponse: `http://localhost:3000/.netlify/functions/paymentResponse`,
+        urlMerchantResponse: this.$rezdy.vinti4.urlMerchantResponse,
         fingerPrint: encodeURIComponent(fingerPrint),
         merchantRef,
         merchantSession,
