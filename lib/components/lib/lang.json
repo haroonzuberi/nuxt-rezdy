@@ -129,7 +129,8 @@
     "CONFIRMED": "Your order is confirmed!",
     "CANCELLED": "Your order has been cancelled.",
     "ABANDONED_CART": "Your cart was abandoned.",
-    "popup-notice": "Please ensure pop-up windows are enabled on your browser before completing secure payment."
+    "popup-notice": "Please ensure pop-up windows are enabled on your browser before completing secure payment.",
+    "processing-error": "There was an error processing your payment."
   },
   "it": {
     "add-detail": "Aggiungi maggiori dettagli",
@@ -257,7 +258,8 @@
     "CONFIRMED": "Il tuo ordine è confermato!",
     "CANCELLED": "Il tuo ordine è stato cancellato.",
     "ABANDONED_CART": "Il tuo carrello è stato abbandonato.",
-    "popup-notice": "Abilita le finestre popup sul browser prima di completare il pagamento sicuro."
+    "popup-notice": "Abilita le finestre popup sul browser prima di completare il pagamento sicuro.",
+    "processing-error": "Si è verificato un errore durante l'elaborazione del pagamento."
   },
   "fr": {
     "add-detail": "Ajouter des détails supplémentaires",
@@ -381,7 +383,8 @@
     "CONFIRMED": "Votre commande est confirmée!",
     "CANCELLED": "Votre commande a été annulée.",
     "ABANDONED_CART": "Votre panier a été abandonné.",
-    "popup-notice": "Activez les fenêtres contextuelles sur votre navigateur avant d'effectuer le paiement sécurisé."
+    "popup-notice": "Activez les fenêtres contextuelles sur votre navigateur avant d'effectuer le paiement sécurisé.",
+    "processing-error": "Une erreur s'est produite lors du traitement de votre paiement."
   },
   "de": {
     "add-detail": "Zusätzliches Detail hinzufügen",
@@ -505,7 +508,8 @@
     "CONFIRMED": "Ihre Bestellung ist bestätigt!",
     "CANCELLED": "Ihre Bestellung wurde storniert.",
     "ABANDONED_CART": "Ihr Warenkorb wurde aufgegeben.",
-    "popup-notice": "Aktivieren Sie Popup-Fenster in Ihrem Browser, bevor Sie die sichere Zahlung abschließen."
+    "popup-notice": "Aktivieren Sie Popup-Fenster in Ihrem Browser, bevor Sie die sichere Zahlung abschließen.",
+    "processing-error": "Bei der Verarbeitung Ihrer Zahlung ist ein Fehler aufgetreten."
   },
   "es": {
     "add-detail": "Agregar detalles adicionales",
@@ -629,7 +633,8 @@
     "CONFIRMED": "Su pedido esta confirmado!",
     "CANCELLED": "Su pedido ha sido cancelado.",
     "ABANDONED_CART": "Tu carro fue abandonado.",
-    "popup-notice": "Habilite las ventanas emergentes en su navegador antes de completar el pago seguro."
+    "popup-notice": "Habilite las ventanas emergentes en su navegador antes de completar el pago seguro.",
+    "processing-error": "Se produjo un error al procesar su pago."
   },
   "pt": {
     "add-detail": "Adicionar detalhes adicionais",
@@ -753,6 +758,7 @@
     "CONFIRMED": "Seu pedido está confirmado!",
     "CANCELLED": "Seu pedido foi cancelado.",
     "ABANDONED_CART": "Seu carrinho foi abandonado.",
-    "popup-notice": "Ative janelas pop-up no seu navegador antes de concluir o pagamento seguro."
+    "popup-notice": "Ative janelas pop-up no seu navegador antes de concluir o pagamento seguro.",
+    "processing-error": "Ocorreu um erro ao processar seu pagamento."
   }
 }

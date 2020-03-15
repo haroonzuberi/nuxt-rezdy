@@ -129,9 +129,13 @@ export default {
       this.$ecommerce.trackPurchase({ booking })
     },
     async handlePaymentFailure(code) {
-      await this.$rezdy.cancelBooking(this.completedBooking.orderNumber)
+      await this.$rezdy.updateBookingStatus(
+        code,
+        this.completedBooking,
+        'ABANDONED_CART'
+      )
       this.handleError({
-        message: 'There was an error processing your request.'
+        message: this.$t('processing-error')
       })
       this.processing = false
     },
