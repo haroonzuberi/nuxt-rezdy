@@ -128,7 +128,8 @@
     "PENDING_CUSTOMER": "Your order may require additional details",
     "CONFIRMED": "Your order is confirmed!",
     "CANCELLED": "Your order has been cancelled.",
-    "ABANDONED_CART": "Your cart was abandoned."
+    "ABANDONED_CART": "Your cart was abandoned.",
+    "popup-notice": "Please ensure pop-up windows are enabled on your browser before completing secure payment."
   },
   "it": {
     "add-detail": "Aggiungi maggiori dettagli",
@@ -255,7 +256,8 @@
     "PENDING_CUSTOMER": "Il tuo ordine potrebbe richiedere ulteriori dettagli.",
     "CONFIRMED": "Il tuo ordine è confermato!",
     "CANCELLED": "Il tuo ordine è stato cancellato.",
-    "ABANDONED_CART": "Il tuo carrello è stato abbandonato."
+    "ABANDONED_CART": "Il tuo carrello è stato abbandonato.",
+    "popup-notice": "Abilita le finestre popup sul browser prima di completare il pagamento sicuro."
   },
   "fr": {
     "add-detail": "Ajouter des détails supplémentaires",
@@ -378,7 +380,8 @@
     "PENDING_CUSTOMER": "Votre commande peut nécessiter des détails supplémentaires.",
     "CONFIRMED": "Votre commande est confirmée!",
     "CANCELLED": "Votre commande a été annulée.",
-    "ABANDONED_CART": "Votre panier a été abandonné."
+    "ABANDONED_CART": "Votre panier a été abandonné.",
+    "popup-notice": "Activez les fenêtres contextuelles sur votre navigateur avant d'effectuer le paiement sécurisé."
   },
   "de": {
     "add-detail": "Zusätzliches Detail hinzufügen",
@@ -501,7 +504,8 @@
     "PENDING_CUSTOMER": "Ihre Bestellung kann zusätzliche Details erfordern.",
     "CONFIRMED": "Ihre Bestellung ist bestätigt!",
     "CANCELLED": "Ihre Bestellung wurde storniert.",
-    "ABANDONED_CART": "Ihr Warenkorb wurde aufgegeben."
+    "ABANDONED_CART": "Ihr Warenkorb wurde aufgegeben.",
+    "popup-notice": "Aktivieren Sie Popup-Fenster in Ihrem Browser, bevor Sie die sichere Zahlung abschließen."
   },
   "es": {
     "add-detail": "Agregar detalles adicionales",
@@ -624,7 +628,8 @@
     "PENDING_CUSTOMER": "Su pedido puede requerir detalles adicionales.",
     "CONFIRMED": "Su pedido esta confirmado!",
     "CANCELLED": "Su pedido ha sido cancelado.",
-    "ABANDONED_CART": "Tu carro fue abandonado."
+    "ABANDONED_CART": "Tu carro fue abandonado.",
+    "popup-notice": "Habilite las ventanas emergentes en su navegador antes de completar el pago seguro."
   },
   "pt": {
     "add-detail": "Adicionar detalhes adicionais",
@@ -747,6 +752,7 @@
     "PENDING_CUSTOMER": "Seu pedido pode exigir detalhes adicionais.",
     "CONFIRMED": "Seu pedido está confirmado!",
     "CANCELLED": "Seu pedido foi cancelado.",
-    "ABANDONED_CART": "Seu carrinho foi abandonado."
+    "ABANDONED_CART": "Seu carrinho foi abandonado.",
+    "popup-notice": "Ative janelas pop-up no seu navegador antes de concluir o pagamento seguro."
   }
 }

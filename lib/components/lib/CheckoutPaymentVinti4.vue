@@ -34,6 +34,11 @@
         </div>
       </div>
     </div>
+    <div class="content">
+      <p class="has-text-centered is-size-7">
+        {{ $t('popup-notice') }}
+      </p>
+    </div>
     <b-loading :active="processing" :is-full-page="false" />
   </form>
 </template>
@@ -61,9 +66,11 @@ export default {
   data() {
     return {
       processing: false,
-      acceptedCards: [
-        'visa'
-      ]
+      acceptedCards: ['visa'],
+      iframeSrc: null,
+      messageListener: null,
+      completedBooking: null,
+      paymentWindow: null
     }
   },
   watch: {
@@ -85,6 +92,12 @@ export default {
       }
     })
   },
+  mounted() {
+    window.addEventListener('message', this.receiveMessage, false)
+  },
+  beforeDestroy() {
+    window.removeEventListener('message', this.receiveMessage, false)
+  },
   methods: {
     handleError(error) {
       const { message } = error
@@ -93,14 +106,42 @@ export default {
         type: 'is-danger'
       })
     },
+    receiveMessage(message) {
+      if (!message || !message.data) return
+      const { status, code } = JSON.parse(message.data)
+      if (status === 'success') {
+        this.handlePaymentSuccess(code)
+      }
+      if (status === 'error') {
+        this.handlePaymentFailure(code)
+      }
+      this.paymentWindow.close()
+    },
+    async handlePaymentSuccess(code) {
+      const { booking } = await this.$rezdy.updateBookingStatus(
+        code,
+        this.completedBooking,
+        'CONFIRMED'
+      )
+      this.processing = false
+
+      this.$emit('confirmation', { booking })
+      this.$ecommerce.trackPurchase({ booking })
+    },
+    async handlePaymentFailure(code) {
+      await this.$rezdy.cancelBooking(this.completedBooking.orderNumber)
+      this.handleError({
+        message: 'There was an error processing your request.'
+      })
+      this.processing = false
+    },
     async handleSubmit() {
       if (!this.canPay) return
       this.processing = true
 
-      // const totalDue = 1000;
       const { totalDue, totalCurrency } = this.quote
 
-      /* const order = await this.$rezdy.placeOrder({
+      const order = await this.$rezdy.placeOrder({
         ...this.booking,
         fields: this.fields,
         status: 'PROCESSING',
@@ -120,13 +161,10 @@ export default {
         return
       }
 
-      const { booking } = order
-
-      console.log('orderNumber', booking.orderNumber);
-      console.log('booking'); */
+      this.completedBooking = order.booking
 
       // get fingerprint
-      const merchantRef = 'R' + 1000 + Math.floor(Math.random() * 1000)
+      const merchantRef = this.completedBooking.orderNumber
       const merchantSession = 'S' + 1000 + Math.floor(Math.random() * 1000)
       const timestamp = format(new Date(), 'yyyy-MM-dd HH:mm:ss')
       const amount = Math.round(totalDue)
@@ -134,9 +172,8 @@ export default {
         params: {
           timestamp,
           amount,
-          merchantRef, // booking.orderNumber,
-          merchantSession,
-          currency: 978
+          merchantRef,
+          merchantSession
         }
       })
 
@@ -144,26 +181,19 @@ export default {
       const query = qs({
         token,
         amount,
-        urlMerchantResponse: `http://10.1.10.99:3000/payment/response.html`,
+        // urlMerchantResponse: `https://nolimitsadventure.netlify.com/.netlify/functions/paymentResponse`,
+        urlMerchantResponse: `http://localhost:3000/.netlify/functions/paymentResponse`,
         fingerPrint: encodeURIComponent(fingerPrint),
         merchantRef,
         merchantSession,
-        timestamp,
-        currency: 978
+        timestamp
       })
 
-      console.log(query)
-
-      window.open(
+      this.paymentWindow = window.open(
         `${baseURL}vinti4/payment?${query}`,
         'Vinti4 Payment',
         'width=420,height=795,location=no,toolbar=no,menubar=no,status=no,titlebar=no'
       )
-
-      this.processing = false
-
-      /* this.$emit('confirmation', { booking })
-      this.$ecommerce.trackPurchase({ booking }) */
     }
   }
 }
