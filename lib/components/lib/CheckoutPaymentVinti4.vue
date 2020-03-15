@@ -97,6 +97,9 @@ export default {
   },
   beforeDestroy() {
     window.removeEventListener('message', this.receiveMessage, false)
+    if (this.paymentWindow) {
+      this.paymentWindow.removeEventListener('unload', this.handleAbandonment)
+    }
   },
   methods: {
     handleError(error) {
@@ -108,13 +111,14 @@ export default {
     },
     receiveMessage(message) {
       if (!message || !message.data) return
+      this.paymentWindow.removeEventListener('unload', this.handleAbandonment)
       this.paymentWindow.close()
       const { status, code } = JSON.parse(message.data)
       if (status === 'success') {
         this.handlePaymentSuccess(code)
       }
       if (status === 'error') {
-        this.handlePaymentFailure(code)
+        this.handlePaymentFailure()
       }
     },
     async handlePaymentSuccess(code) {
@@ -128,15 +132,23 @@ export default {
       this.$emit('confirmation', { booking })
       this.$ecommerce.trackPurchase({ booking })
     },
-    async handlePaymentFailure(code) {
+    async handlePaymentFailure() {
       await this.$rezdy.updateBookingStatus(
-        code,
+        this.completedBooking.orderNumber,
         this.completedBooking,
         'ABANDONED_CART'
       )
       this.handleError({
         message: this.$t('processing-error')
       })
+      this.processing = false
+    },
+    async handleAbandonment(code) {
+      await this.$rezdy.updateBookingStatus(
+        this.completedBooking.orderNumber,
+        this.completedBooking,
+        'ABANDONED_CART'
+      )
       this.processing = false
     },
     async handleSubmit() {
@@ -192,11 +204,18 @@ export default {
         timestamp
       })
 
+      const paymentWindowOptions = {
+        top: window.top.outerHeight / 2 + window.top.screenY - 500 / 2,
+        left: window.top.outerWidth / 2 + window.top.screenX - 795 / 2
+      }
+
       this.paymentWindow = window.open(
         `${baseURL}vinti4/payment?${query}`,
         'Vinti4 Payment',
-        'width=420,height=795,location=no,toolbar=no,menubar=no,status=no,titlebar=no'
+        `width=500,height=795,location=no,toolbar=no,menubar=no,status=no,titlebar=no,top=${paymentWindowOptions.top},left=${paymentWindowOptions.left}`
       )
+
+      this.paymentWindow.addEventListener('unload', this.handleAbandonment)
     }
   }
 }
