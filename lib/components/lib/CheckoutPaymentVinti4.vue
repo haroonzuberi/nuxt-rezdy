@@ -39,7 +39,7 @@
         {{ $t('popup-notice') }}
       </p>
     </div>
-    <b-loading :active="processing" :is-full-page="false" />
+    <b-loading :active="processing" :is-full-page="false" :can-cancel="false" />
   </form>
 </template>
 
@@ -108,6 +108,7 @@ export default {
     },
     receiveMessage(message) {
       if (!message || !message.data) return
+      this.paymentWindow.close()
       const { status, code } = JSON.parse(message.data)
       if (status === 'success') {
         this.handlePaymentSuccess(code)
@@ -115,7 +116,6 @@ export default {
       if (status === 'error') {
         this.handlePaymentFailure(code)
       }
-      this.paymentWindow.close()
     },
     async handlePaymentSuccess(code) {
       const { booking } = await this.$rezdy.updateBookingStatus(
