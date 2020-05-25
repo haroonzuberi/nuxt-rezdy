@@ -33,7 +33,7 @@
               </div>
             </slot>
           </span>
-          
+
           <div class="session-product-footer level">
             <div class="level-left">
               <slot name="footer" v-bind:product="products[productCode]" class="level-item" />
@@ -158,11 +158,12 @@ export default {
       this.loading = true
       const { sessions } = await this.$rezdy.getSessions({
         productCode,
+        minAvailability: 1,
         endTimeLocal: this.endTimeLocal,
         limit: this.limit,
         offset: this.offset
       })
-      
+
       const { products } = await this.$rezdy.getProducts({productCode})
       this.products = products
 
