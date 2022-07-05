@@ -25,7 +25,10 @@
         wrapper-classes="input"
         dynamic-placeholder
         mode="international"
+        @input="validatePhoneNumber"
+        :class="!valid? 'is-danger': ''"
       ></vue-tel-input>
+      <p v-if="updatedValue != '' && !valid" class="help is-danger">Please fill out a valid Phone Number.</p>
     </div>
     <birthdate-input
       v-else-if="type === 'Birthdate'"
@@ -278,8 +281,23 @@ export default {
         ]
       if (!items) return []
       return items.split(/\r\n|\r|\n/g)
+    },
+    validatePhoneNumber: function (value, { number, isValid, country }) {
+      this.valid = isValid;
+    },
+
+  },
+  watch: {
+    updatedValue(value){
+      // binding this to the data value in the email input
+      this.updatedValue = value;
+      if(this.type === 'Phone'){
+        this.validatePhoneNumber(value);
+
+      }
     }
-  }
+  },
+
 }
 </script>
 
