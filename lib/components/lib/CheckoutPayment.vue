@@ -4,6 +4,7 @@
     <checkout-booking-fields
       :fields.sync="fields"
       :valid.sync="hasValidBookingFields"
+      :phoneValid.sync="phoneNumberValid"
       hide-optional
     />
     <h2 class="title is-4">{{ $t('payment') }}</h2>
@@ -12,7 +13,7 @@
         <component
           :is="paymentComponent"
           :booking-fields="bookingFields"
-          :can-pay="hasValidBookingFields"
+          :can-pay="hasValidBookingFields && phoneNumberValid"
           :fields="fields"
           @processing="status => (processing = status)"
           @confirmation="handleConfirmation"
@@ -49,6 +50,7 @@ export default {
       },
       fields: [],
       hasValidBookingFields: false,
+      phoneNumberValid: false,
       processing: false
     }
   },

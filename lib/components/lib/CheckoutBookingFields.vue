@@ -140,7 +140,17 @@ export default {
       const update = { label, value }
       const fields = [...this.fields.filter(f => f.label !== label), update]
       this.$emit('update:fields', fields)
-      this.$emit('update:valid', this.$refs.form.checkValidity())
+
+      let validForm = this.$refs.form.checkValidity();
+
+      if(field.fieldType === 'Phone') {
+        const regex = /\+[1-9]{1}[0-9]{10,14}/g
+        const trimed = value.replace(/\s/g, '')
+        let validPhone = trimed.match(regex)
+        validPhone = validPhone && validPhone.length !== 0
+        this.$emit('update:phoneValid', validPhone)
+      }
+      this.$emit('update:valid', validForm)
     }
   }
 }
