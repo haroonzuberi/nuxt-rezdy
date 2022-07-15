@@ -144,8 +144,9 @@ export default {
       let validForm = this.$refs.form.checkValidity();
 
       if(field.fieldType === 'Phone') {
-        const regex = /\+[0-9]{11,14}/g
-        const trimed = value.replace(/\s/g, '')
+        const regex = /\+[1-9]{1}[0-9]{1,14}/g
+        let trimed = value.replace(/\s/g, '')
+        trimed = trimed.replace(/\-/g, '')
         let validPhone = trimed.match(regex)
         validPhone = validPhone && validPhone.length !== 0
         this.$emit('update:phoneValid', validPhone)
