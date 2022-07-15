@@ -100,7 +100,7 @@ export default {
       const fieldOverrides = (this.rezdyOptions.fieldOverrides || [])
         .filter(field => {
           if (!field.countries) return true
-          const countrySelection = this.fields.find(field => field.label === 'Country')          
+          const countrySelection = this.fields.find(field => field.label === 'Country')
           if (!countrySelection) return false
           return field.countries.some(country => country === countrySelection.value)
         })
@@ -144,7 +144,7 @@ export default {
       let validForm = this.$refs.form.checkValidity();
 
       if(field.fieldType === 'Phone') {
-        const regex = /\+[1-9]{1}[0-9]{10,14}/g
+        const regex = /\+[0-9]{11,14}/g
         const trimed = value.replace(/\s/g, '')
         let validPhone = trimed.match(regex)
         validPhone = validPhone && validPhone.length !== 0
