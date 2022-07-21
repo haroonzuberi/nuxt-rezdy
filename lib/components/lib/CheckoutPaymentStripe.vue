@@ -35,7 +35,7 @@
             native-type="submit"
             type="is-success"
             size="is-medium"
-            :disabled="!canPay || !valid"
+            :disabled="!canPay || !valid || processing"
             icon-left="lock"
           >
             {{ $t('pay', { amount: totalDue }) }}
