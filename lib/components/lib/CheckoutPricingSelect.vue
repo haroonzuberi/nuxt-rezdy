@@ -156,6 +156,7 @@ export default {
   },
   created() {
     this.quantities = this.value
+    this.updateGroupCount(2)
   },
   methods: {
     valueInOptionRange(value, option) {
